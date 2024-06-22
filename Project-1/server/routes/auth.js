@@ -1,9 +1,10 @@
 import { Router } from "express";
+import authHandler from "../controllers/authController.js";
 
 const router = Router();
 
 router.route("/")
-    .post(registrationHandler)
+    .post(authHandler)
 
 
 export default router;
