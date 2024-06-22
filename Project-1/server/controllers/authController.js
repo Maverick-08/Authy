@@ -41,7 +41,7 @@ const authHandler = async (req, res) => {
                 }
             },
             process.env.ACCESS_TOKEN,
-            { expiresIn: "5m" }
+            { expiresIn: "2m" }
         )
 
         const refreshToken = jwt.sign(
@@ -52,7 +52,7 @@ const authHandler = async (req, res) => {
                 }
             },
             process.env.REFRESH_TOKEN,
-            { expiresIn: "5m" }
+            { expiresIn: "1d" }
         )
 
         // storing refresh token on client side

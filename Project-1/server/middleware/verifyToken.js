@@ -22,10 +22,10 @@ const tokenVerificationHandler = (req, res, next) => {
 
             req.username = decoded["userData"]["username"];
             req.role = decoded["userData"]["role"];
+
+            next();
         }
     )
-
-    next();
 }
 
 export default tokenVerificationHandler;
