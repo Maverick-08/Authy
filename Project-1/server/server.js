@@ -10,7 +10,7 @@ config();
 app.use(cors());
 app.use(express.json());
 
-app.get("/",)
+app.use("/register",RegistrationHandler)
 
 
 // Global Error Handler

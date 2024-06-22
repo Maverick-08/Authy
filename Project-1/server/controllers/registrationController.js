@@ -11,8 +11,8 @@ const registrationHandler = async (req, res) => {
     try {
         const payload = req.body;
 
-        // During registration we will be receiving username, password and a confirm password. If any of the field is missing send a bad request
-        if (!payload || !payload.username || !payload.password || !payload.confirmPassword) {
+        // During registration we will be receiving username and confirmed password. If any of the field is missing send a bad request
+        if (!payload.username || !payload.password) {
             return res.status(statusCodes.badRequest).json({ msg: "Missing username or password" })
         }
 
@@ -47,7 +47,7 @@ const registrationHandler = async (req, res) => {
 
         // Before adding in the database hash the password for extra security
         // hash(password, saltRounds)
-        const hashedPassword = await bcrypt.hash(payload.confirmPassword, 10);
+        const hashedPassword = await bcrypt.hash(payload.password, 10);
 
         // create new user object
         // uuid() returns a unique string everytime it is called
@@ -55,7 +55,7 @@ const registrationHandler = async (req, res) => {
         const newUser = {
             id: uuid(),
             username: payload.username,
-            password: payload.password,
+            password: hashedPassword,
             createdAt: format(new Date(), "dd/MM/yyy HH:mm:ss")
         }
 
