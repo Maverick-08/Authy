@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
+import status from './config/statusCode.js'
 
 const app = express();
 
@@ -12,4 +13,13 @@ app.get("/",(req,res)=>{
     res.send("working")
 })
 
-app.listen(process.env.PORT,()=>{console.log("Server is running at port 3000");})
+
+// Global Error Handler
+app.use((err,req,res,next)=>{
+    console.error(err);
+    res.status(status.internalServerError).json({msg:"Internal server error"})
+})
+
+app.listen(process.env.PORT,
+    ()=>{console.log("Server is running at port 3000")}
+)
