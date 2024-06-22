@@ -1,10 +1,11 @@
 import { Router } from "express";
+import { registrationHandler } from "../controllers/registrationController";
 
 const router = Router();
 
 router.route("/")
     .get("/",(req,res)=> res.json({msg:"Register route"}))
-    .post("/")
+    .post("/",registrationHandler)
 
 
 export default router;

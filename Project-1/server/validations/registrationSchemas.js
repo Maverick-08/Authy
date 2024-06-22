@@ -14,21 +14,29 @@ const passwordSchema = zod.string()
 
 
 export const validateUsername = (username)=>{
-    const response = usernameSchema.safeParse(username).error.errors[0].message;
+    const response = usernameSchema.safeParse(username).error?.errors[0].message;
 
-    return response;
+    return !response ? {status:true} : {status:false,msg:response};
 }
 
 export const validatePassword = (password)=>{
-    const response = passwordSchema.safeParse(password).error.errors[0].message;
+    const response = passwordSchema.safeParse(password).error?.errors[0].message;
 
-    return response;
+    return !response ? {status:true} : {status:false,msg:response};
 }
 
-// Testing
+//                  Validating password
+// console.log(validatePassword("Vivek2@"));
+// { status: true }
 
-console.log(validatePassword("Vivek2"));
-// Password must contain at least one special character
+// console.log(validatePassword("Vivek2"));
+// {
+//     status: false,
+//     msg: 'Password must contain at least one special character'
+// }
 
-console.log(validateUsername("i"));
-// Username must be at least 3 characters long
+//                   Validating username
+// console.log(validateUsername("V"));
+// { status: false, msg: 'Username must be at least 3 characters long' }
+// console.log(validateUsername("Vive"));
+// { status: true }
