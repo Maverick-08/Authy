@@ -7,12 +7,14 @@ import AuthHandler from './routes/auth.js';
 import DataHandler from './routes/api/data.js';
 import verifyJWT from './middleware/verifyToken.js';
 import RefreshToken from './routes/refresh.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
 config();
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser())
 
 app.use("/register",RegistrationHandler);
 

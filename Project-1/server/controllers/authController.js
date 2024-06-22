@@ -61,15 +61,11 @@ const authHandler = async (req, res) => {
         // secure: false for development
 
         // storing refresh token in user's record
-        existingUsersData.forEach((index, element, arr) => {
-            if (element.username === userExists.username) {
-                let updatedUserDetails = { ...userExists };
-                updatedUserDetails["refreshToken"] = refreshToken;
-                arr[index] = updatedUserDetails;
-            }
-        });
+        const newUsersData = existingUsersData.filter(user => user.username !== userExists.username);
 
-        await fs.writeFile(path.join(Root, "data", "users.json"), JSON.stringify(existingUsersData));
+        newUsersData.push({...userExists,refreshToken})
+
+        await fs.writeFile(path.join(Root, "data", "users.json"), JSON.stringify(newUsersData));
 
         return res.json({ msg: "Login successful", accessToken })
     }
