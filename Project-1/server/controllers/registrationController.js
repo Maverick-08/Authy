@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import Root from '../config/path.js';
 import statusCodes from '../config/statusCode.js';
+import roleList from '../config/rolesList.js'
 import { format } from 'date-fns';
 import { v4 as uuid } from 'uuid';
 import { validatePassword, validateUsername } from '../validations/registrationSchemas.js';
@@ -55,6 +56,7 @@ const registrationHandler = async (req, res) => {
         const newUser = {
             id: uuid(),
             username: payload.username,
+            role: roleList['level-1'],
             password: hashedPassword,
             createdAt: format(new Date(), "dd/MM/yyy HH:mm:ss")
         }
