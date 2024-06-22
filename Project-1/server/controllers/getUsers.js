@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import Root from '../config/path.js';
-import statusCodes from '../config/statusCode';
+import statusCodes from '../config/statusCode.js';
 
 const getAllPlayersData = async (req,res) => {
     try{
