@@ -17,7 +17,7 @@ const tokenVerificationHandler = (req, res, next) => {
         process.env.ACCESS_TOKEN,
         (err, decoded) => {
             if (err) {
-                return res.status(statusCodes.forbidden).json({ msg: "Token has been tampered." })
+                return res.status(statusCodes.forbidden).json({msg:"Invalid token"})
             }
 
             req.username = decoded["userData"]["username"];

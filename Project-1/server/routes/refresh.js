@@ -1,14 +1,8 @@
-import fs from 'fs/promises';
-import path from 'path';
-import Root from '../config/path.js';
-import statusCodes from '../config/statusCode';
+import { Router } from "express";
+import refreshTokenHandler from "../controllers/refreshToken.js";
 
-const refreshTokenHandler = async (req,res)=>{
-    try{
+const router = Router();
 
-    }
-    catch(err){
-        console.log("@refreshTokenHandler : "+err.name+"\n"+err.message);
-        return res.status(statusCodes.forbidden).json({})
-    }
-}
+router.get("/",refreshTokenHandler)
+
+export default router;

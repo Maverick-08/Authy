@@ -6,6 +6,7 @@ import RegistrationHandler from './routes/register.js'
 import AuthHandler from './routes/auth.js';
 import DataHandler from './routes/api/data.js';
 import verifyJWT from './middleware/verifyToken.js';
+import RefreshToken from './routes/refresh.js';
 
 const app = express();
 
@@ -13,19 +14,21 @@ config();
 app.use(cors());
 app.use(express.json());
 
-app.use("/register",RegistrationHandler)
+app.use("/register",RegistrationHandler);
 
-app.use("/auth",AuthHandler)
+app.use("/auth",AuthHandler);
 
-app.use(verifyJWT)
+app.use(verifyJWT);
 
-app.use("/data",DataHandler)
+app.use("/refresh",RefreshToken);
+
+app.use("/data",DataHandler);
 
 
 // Global Error Handler
 app.use((err,req,res,next)=>{
     console.error(err);
-    res.status(status.internalServerError).json({msg:"Internal server error"})
+    res.status(status.internalServerError).json({msg:"Internal server error"});
 })
 
 app.listen(process.env.PORT,
