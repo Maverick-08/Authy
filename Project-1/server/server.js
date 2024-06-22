@@ -5,6 +5,7 @@ import status from './config/statusCode.js';
 import RegistrationHandler from './routes/register.js'
 import AuthHandler from './routes/auth.js';
 import DataHandler from './routes/api/data.js';
+import verifyJWT from './middleware/verifyToken.js';
 
 const app = express();
 
@@ -15,6 +16,8 @@ app.use(express.json());
 app.use("/register",RegistrationHandler)
 
 app.use("/auth",AuthHandler)
+
+app.use(verifyJWT)
 
 app.use("/data",DataHandler)
 
