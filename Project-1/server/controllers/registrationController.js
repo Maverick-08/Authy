@@ -7,7 +7,7 @@ import { format } from 'date-fns';
 import { v4 as uuid } from 'uuid';
 import { validatePassword, validateUsername } from '../validations/registrationSchemas.js';
 
-export const registrationHandler = async (req, res) => {
+const registrationHandler = async (req, res) => {
     try {
         const payload = req.body;
 
@@ -72,3 +72,5 @@ export const registrationHandler = async (req, res) => {
         res.status(statusCodes.internalServerError).json({ msg: "Internal server error" })
     }
 }
+
+export default registrationHandler;

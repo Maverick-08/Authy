@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
-import status from './config/statusCode.js'
+import status from './config/statusCode.js';
+import RegistrationHandler from './routes/register.js'
 
 const app = express();
 
@@ -9,9 +10,7 @@ config();
 app.use(cors());
 app.use(express.json());
 
-app.get("/",(req,res)=>{
-    res.send("working")
-})
+app.get("/",)
 
 
 // Global Error Handler
