@@ -35,7 +35,7 @@ const registrationHandler = async (req, res) => {
 
         // If we have received all the data in a correct format check whether the username is present in our database or not.
 
-        const existingUsersData = JSON.parse(await fs.readFile(path.join(Root, "data", "data.json"), 'utf-8'))
+        const existingUsersData = JSON.parse(await fs.readFile(path.join(Root, "data", "users.json"), 'utf-8'))
 
         const doesUserExists = existingUsersData.find(user => user.username === payload.username)
 
@@ -65,7 +65,7 @@ const registrationHandler = async (req, res) => {
         const newUsersData = [...existingUsersData, newUser]
 
         // add the data into the database
-        await fs.writeFile(path.join(Root, "data", "data.json"), JSON.stringify(newUsersData));
+        await fs.writeFile(path.join(Root, "data", "users.json"), JSON.stringify(newUsersData));
 
         res.status(statusCodes.resourceCreated).json({ msg: "New user created !" })
     }

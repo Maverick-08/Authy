@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt';
 import path from 'path';
 import Root from '../config/path.js';
 import statusCodes from '../config/statusCode.js';
-import roleList from '../config/rolesList.js'
 import jwt from 'jsonwebtoken';
 
 const authHandler = async (req, res) => {
@@ -16,7 +15,7 @@ const authHandler = async (req, res) => {
         }
 
         // Check whether the user exists in our database
-        const existingUsersData = JSON.parse(await fs.readFile(path.join(Root, "data", "data.json"), 'utf-8'))
+        const existingUsersData = JSON.parse(await fs.readFile(path.join(Root, "data", "users.json"), 'utf-8'))
 
         const userExists = existingUsersData.find(user => user.username === payload.username)
 
@@ -70,7 +69,7 @@ const authHandler = async (req, res) => {
             }
         });
 
-        await fs.writeFile(path.join(Root, "data", "data.json"), JSON.stringify(existingUsersData));
+        await fs.writeFile(path.join(Root, "data", "users.json"), JSON.stringify(existingUsersData));
 
         return res.json({ msg: "Login successful", accessToken })
     }
