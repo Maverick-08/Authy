@@ -9,11 +9,12 @@ import LogoutHandler from './routes/logout.js';
 import verifyJWT from './middleware/verifyToken.js';
 import RefreshToken from './routes/refresh.js';
 import cookieParser from 'cookie-parser';
+import { corsOptions } from './config/corsOptions.js';
 
 const app = express();
 
 config();
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser())
 
