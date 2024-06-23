@@ -4,12 +4,15 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AlertBox from "./AlertBox";
+import { useSetRecoilState } from "recoil";
+import { user } from "../state/atoms/userAtom";
 
 export default function SignIn() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [alert, setAlert] = useState({ show: false, success: false, msg: "" });
+  const setUser = useSetRecoilState(user)
 
   function changeUsername(e) {
     setUsername(e.target.value);
@@ -28,10 +31,11 @@ export default function SignIn() {
       const payload = { username, password };
       try {
         const response = await axios.post("http://localhost:3000/auth", payload);
-        console.log(response);
+        setUser({username,accessToken:response.data.accessToken})
         setPassword("");
         setUsername("");
         setAlert({ show: true, success: true, msg: "Login successful!" });
+        setTimeout(()=>navigate("/"),2000);
       } catch (error) {
         setAlert({ show: true, success: false, msg: "Login failed. Please try again." });
       }
