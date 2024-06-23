@@ -5,6 +5,7 @@ import status from './config/statusCode.js';
 import RegistrationHandler from './routes/register.js'
 import AuthHandler from './routes/auth.js';
 import DataHandler from './routes/api/data.js';
+import LogoutHandler from './routes/logout.js';
 import verifyJWT from './middleware/verifyToken.js';
 import RefreshToken from './routes/refresh.js';
 import cookieParser from 'cookie-parser';
@@ -25,6 +26,8 @@ app.use(verifyJWT);
 app.use("/refresh",RefreshToken);
 
 app.use("/data",DataHandler);
+
+app.use("/logout",LogoutHandler);
 
 
 // Global Error Handler
