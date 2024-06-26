@@ -10,6 +10,7 @@ import RefreshToken from './routes/refresh.js';
 import Logout from './routes/logout.js';
 import ErrorHandler from './config/errorHandler.js';
 import corsOptions from './config/corsOptions.js';
+import Credentials from './middlewares/credentials.js';
 import { config } from 'dotenv';
 import { verifyTokenHandler } from './middlewares/verifyToken.js';
 
@@ -17,6 +18,7 @@ const app = express();
 
 // MIDDLEWARES
 config();
+app.use(Credentials);
 app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(express.json());
