@@ -53,12 +53,12 @@ export const refreshTokenHandler = async (req, res) => {
                         }
                     },
                     process.env.REFRESH_TOKEN,
-                    { expiresIn: '5m' }
+                    { expiresIn: '1d' }
                 )
 
                 await Users.updateOne({ username: user.username }, { refreshToken: newRefreshToken });
                 
-                res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000 })
+                res.cookie('jwt', newRefreshToken, { httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000 })
 
                 res.json({ newAccessToken });
             }

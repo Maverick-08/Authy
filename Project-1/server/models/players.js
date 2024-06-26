@@ -31,7 +31,7 @@ const playerSchema = mongoose.Schema({
     }
 }, {
     timestamps: true,
-    collection: 'players' 
+    collection: 'Players' 
 });
 
 export const Players = mongoose.model('Players', playerSchema);

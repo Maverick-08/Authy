@@ -1,11 +1,15 @@
 import { Router } from "express";
-import { getAllPlayersData, getPlayerData } from "../../controllers/playersController.js";
+import { addPlayer, getAllPlayersData, getPlayerData, updatePlayer } from "../../controllers/playersController.js";
 
 const router = Router();
 
+router.get("/:_id", getPlayerData)
+
 router.route("/")
-    .get("/", getAllPlayersData)
-    .get("/*", getPlayerData)
+    .get(getAllPlayersData)
+    .post(addPlayer)
+    .put(updatePlayer)
 
 
-    export default router;
+
+export default router;
