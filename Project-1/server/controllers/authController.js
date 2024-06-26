@@ -33,8 +33,10 @@ export const authHandler = async (req, res) => {
         // if username and password matches create access and refresh tokens
         const accessToken = jwt.sign(
             {
-                username: user.username,
-                role: user.role
+                "userData": {
+                    username: user.username,
+                    role: user.role
+                }
             },
             process.env.ACCESS_TOKEN,
             { expiresIn: '5m' }
@@ -42,8 +44,10 @@ export const authHandler = async (req, res) => {
 
         const refreshToken = jwt.sign(
             {
-                username: user.username,
-                role: user.role
+                "userData": {
+                    username: user.username,
+                    role: user.role
+                }
             },
             process.env.REFRESH_TOKEN,
             { expiresIn: '1d' }
@@ -61,10 +65,10 @@ export const authHandler = async (req, res) => {
         // secure: true for production
         // secure: false for development
 
-        res.json({accessToken, msg: "Login successfull" });
+        res.json({ accessToken, msg: "Login successfull" });
     }
-    catch(err){
-        console.log("@authController : "+err.name+"\n"+err.message);
-        res.status(statusCodes.internalServerError).json({msg:"Internal server error"})
+    catch (err) {
+        console.log("@authController : " + err.name + "\n" + err.message);
+        res.status(statusCodes.internalServerError).json({ msg: "Internal server error" })
     }
 }
