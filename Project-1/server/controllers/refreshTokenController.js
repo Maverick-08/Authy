@@ -4,9 +4,13 @@ import { Users } from '../models/newUser.js';
 
 export const refreshTokenHandler = async (req, res) => {
     const cookie = req.cookies;
+    // console.log(cookie);
+    // {
+    //     jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJ1c2VybmFtZSI6IlZpdmVrIiwicm9sZSI6IlVzZXIifSwiaWF0IjoxNzE5Mzg0OTkzLCJleHAiOjE3MTk0NzEzOTN9.N-zl0dzjq8nK-EP5U_Bbcz-rYuQ1xuCrtaV43pcE97c'
+    // }
 
     if (!cookie || !cookie.jwt) {
-        return res.status(statusCodes.forbidden);
+        return res.sendStatus(statusCodes.forbidden);
     }
 
     try {
@@ -16,7 +20,7 @@ export const refreshTokenHandler = async (req, res) => {
         const user = await Users.findOne({ refreshToken });
 
         if (!user) {
-            return res.status(statusCodes.forbidden);
+            return res.sendStatus(statusCodes.forbidden);
         }
 
         jwt.verify(
@@ -53,6 +57,8 @@ export const refreshTokenHandler = async (req, res) => {
                 )
 
                 await Users.updateOne({ username: user.username }, { refreshToken: newRefreshToken });
+                
+                res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000 })
 
                 res.json({ newAccessToken });
             }
