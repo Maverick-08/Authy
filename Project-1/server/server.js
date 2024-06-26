@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import statusCodes from './config/statusCodes.js';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import connect from './config/dbConn.js';
