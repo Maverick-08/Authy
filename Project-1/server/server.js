@@ -5,7 +5,9 @@ import mongoose from 'mongoose';
 import connect from './config/dbConn.js';
 import Register from './routes/register.js';
 import Authenticate from './routes/auth.js';
+import CheckToken from './routes/checkToken.js'
 import { config } from 'dotenv';
+import { verifyTokenHandler } from './middlewares/verifyToken.js';
 
 const app = express();
 
@@ -20,6 +22,10 @@ connect();
 app.use("/register", Register);
 
 app.use("/auth", Authenticate);
+
+app.use(verifyTokenHandler)
+
+app.use("/check",CheckToken)
 
 
 

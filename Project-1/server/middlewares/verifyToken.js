@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import statusCodes from '../config/statusCodes';
+import statusCodes from '../config/statusCodes.js';
 
 export const verifyTokenHandler = (req,res,next) => {
     const authHeader = req.headers.authorization || req.headers.Authorization
