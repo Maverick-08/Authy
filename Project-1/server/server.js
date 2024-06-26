@@ -1,9 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import statusCodes from './config/statusCodes.js';
-import {config} from 'dotenv';
-import connect from './config/dbConn.js';
 import mongoose from 'mongoose';
+import connect from './config/dbConn.js';
+import Register from './routes/register.js';
+import {config} from 'dotenv';
 
 const app = express();
 
@@ -15,7 +16,7 @@ connect();
 
 
 // PATHS
-// app.use("/register",)
+app.use("/register", Register);
 
 
 
