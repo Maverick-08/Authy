@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { getAllPlayersData } from "../../controllers/playersController.js";
+import { getAllPlayersData, getPlayerData } from "../../controllers/playersController.js";
 
 const router = Router();
 
 router.route("/")
     .get("/", getAllPlayersData)
-    .post("/")
+    .get("/*", getPlayerData)
 
 
     export default router;
