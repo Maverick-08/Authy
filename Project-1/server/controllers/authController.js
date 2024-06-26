@@ -36,8 +36,8 @@ const authHandler = async (req, res) => {
         const accessToken = jwt.sign(
             {
                 "userData": {
-                    username: payload.username,
-                    role: payload.role
+                    username: userExists.username,
+                    role: userExists.role
                 }
             },
             process.env.ACCESS_TOKEN,
@@ -47,8 +47,8 @@ const authHandler = async (req, res) => {
         const refreshToken = jwt.sign(
             {
                 "userData": {
-                    username: payload.username,
-                    role: payload.role
+                    username: userExists.username,
+                    role: userExists.role
                 }
             },
             process.env.REFRESH_TOKEN,
@@ -67,7 +67,7 @@ const authHandler = async (req, res) => {
 
         await fs.writeFile(path.join(Root, "data", "users.json"), JSON.stringify(newUsersData));
 
-        return res.json({ msg: "Login successful", accessToken })
+        return res.json({status:true,username:userExists.username,role:userExists.role,accessToken })
     }
     catch (err) {
         console.log("@authController : " + err.name + "\n" + err.message);

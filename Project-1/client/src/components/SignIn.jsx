@@ -4,15 +4,20 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AlertBox from "./AlertBox";
+import { userInfo, accessToken } from "../state/atoms/userAtom";
 import { useSetRecoilState } from "recoil";
-import { user } from "../state/atoms/userAtom";
+import { userActions } from "../actions/userActions.js";
+
 
 export default function SignIn() {
   const navigate = useNavigate();
+  
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [alert, setAlert] = useState({ show: false, success: false, msg: "" });
-  const setUser = useSetRecoilState(user)
+  const Login = userActions().Login;
+
+  // const setUserInfo = useSetRecoilState(userInfo);
 
   function changeUsername(e) {
     setUsername(e.target.value);
@@ -22,26 +27,53 @@ export default function SignIn() {
     setPassword(e.target.value);
   }
 
-  function route() {
+  function route(){
     navigate("/register");
   }
 
-  async function login() {
-    if (password !== "" && username !== "") {
-      const payload = { username, password };
-      try {
-        const response = await axios.post("http://localhost:3000/auth", payload);
-        setUser({username,accessToken:response.data.accessToken})
-        setPassword("");
-        setUsername("");
-        setAlert({ show: true, success: true, msg: "Login successful!" });
-        setTimeout(()=>navigate("/"),2000);
-      } catch (error) {
-        setAlert({ show: true, success: false, msg: "Login failed. Please try again." });
+  // async function login(){
+  //   let response;
+
+  //   if(username && password){
+  //       try{
+          
+  //         response = await axios.post("http://localhost:3000/auth",{username,password});
+
+  //         const accessToken = response.data.accessToken;
+
+  //         if(accessToken){
+  //           setAlert({show:true,success:true,msg:"Login Successfull"})
+  //           setUserInfo({username})
+  //           setTimeout(()=> navigate("/"),1500);
+  //         }
+
+  //       }catch(err){
+  //         console.log("@login : "+err.name+"\n"+err.message);
+  //         setAlert({show:true,success:false,msg:"Authentication Failed"})
+  //       }
+  //   }
+  //   else{
+  //     setAlert({show:true,success:false,msg:"Please enter username and password."})
+  //   }
+  // }
+
+  function login(){
+
+
+    if(username && password){
+      if(Login({username,password})){
+
+        setAlert({show:true,success:true,msg:"Login successful"})
+        setTimeout(()=>{navigate("/")},1500);
       }
-    } else {
-      setAlert({ show: true, success: false, msg: "Empty fields are not allowed" });
+      else{
+        setAlert({show:true,success:false,msg:"Invalid credentials"})
+      }
     }
+    else{
+      setAlert({show:true,success:false,msg:"Enter credentials"})
+    }
+    
   }
 
   return (
