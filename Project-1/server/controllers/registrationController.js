@@ -39,7 +39,7 @@ export const registrationHandler = async (req, res) => {
             password: hashedPassword
         })
 
-        res.json({
+        res.status(statusCodes.resourceCreated).json({
             id: newUser.id,
             username: newUser.username,
             role: newUser.role,
