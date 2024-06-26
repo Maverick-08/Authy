@@ -8,7 +8,8 @@ import Register from './routes/register.js';
 import Authenticate from './routes/auth.js';
 import CheckToken from './routes/checkToken.js';
 import RefreshToken from './routes/refresh.js';
-import Logout from './routes/logout.js'
+import Logout from './routes/logout.js';
+import ErrorHandler from './config/errorHandler.js';
 import { config } from 'dotenv';
 import { verifyTokenHandler } from './middlewares/verifyToken.js';
 
@@ -40,10 +41,7 @@ app.use("/logout", Logout);
 
 
 // Global Error function
-app.use((err, req, res, next) => {
-    console.error(err);
-    res.status(statusCodes.internalServerError).json({ msg: "Internal server error" });
-})
+app.use(ErrorHandler)
 
 // DATABASE
 mongoose.connection.once('open', () => {
