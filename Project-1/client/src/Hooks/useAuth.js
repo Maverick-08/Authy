@@ -27,6 +27,26 @@ const useAuth = () => {
         }
     };
 
+    const register = async (username, password) => {
+        try {
+            const response = await axios.post("http://localhost:3000/register", { username, password });
+            const data = response.data;
+
+            console.log(data);
+
+            setUser({ username, role: data.role ,id: data.id});
+
+            return { status: true, msg: "Login Successful" };
+
+        } catch (err) {
+            console.log(err);
+            const errorMsg = err.response?.data?.msg || "Couldn't reach servers";
+            return { status: false, msg: errorMsg };
+        }
+    };
+
+    
+
     const setTokens = (AcessToken, RefreshToken) => {
         if (AcessToken) {
             localStorage.setItem("accessToken", AcessToken);
@@ -109,7 +129,7 @@ const useAuth = () => {
         localStorage.setItem("refreshToken","");
     }
 
-    return { login, isUserValid, logout};
+    return { login, register, isUserValid, logout};
 };
 
 export default useAuth;

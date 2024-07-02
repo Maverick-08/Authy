@@ -4,7 +4,8 @@ export const userAtom = atom({
     key: "userInfo",
     default: {
         username:"User",
-        role:"User"
+        role:"User",
+        id: ""
     }
 })
 
