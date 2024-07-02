@@ -69,7 +69,7 @@ export const authHandler = async (req, res) => {
         // // secure: true for production
         // // secure: false for development
 
-        res.json({ refreshToken, accessToken, role:user.role, id:user.id});
+        res.json({ refreshToken, accessToken, role:user.role, id:user.id, username: user.username});
     }
     catch (err) {
         console.log("@authController : " + err.name + "\n" + err.message);
