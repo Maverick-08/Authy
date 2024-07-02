@@ -1,9 +1,10 @@
 import React from 'react'
+import Navbar from '../components/Navbar'
 
 const Stats = () => {
   return (
     <div>
-      Stats
+      <Navbar />
     </div>
   )
 }

@@ -157,8 +157,7 @@ const useAuth = () => {
     }
 
     const logout = () => {
-        localStorage.setItem("accessToken", "");
-        localStorage.setItem("refreshToken", "");
+        localStorage.clear()
     }
 
     return { login, register, isUserValid, logout };

@@ -7,6 +7,7 @@ import Developer from "./pages/Developer";
 import Stats from "./pages/Stats";
 import Access from "./pages/Access";
 import { RecoilRoot } from "recoil";
+import SignOut from "./pages/SignOut";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/developer" element={<Developer />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/access" element={<Access />} />
+            <Route path="/signout" element={<SignOut />} />
           </Routes>
         </BrowserRouter>
       </RecoilRoot>

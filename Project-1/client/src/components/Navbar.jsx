@@ -5,15 +5,8 @@ import useAuth from "../Hooks/useAuth";
 import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
-  const { isUserValid } = useAuth();
   const user = useRecoilValue(userAtom);
   console.log(user);
-
-  useEffect(() => {
-    if (!isUserValid()) {
-      console.log("Not valid");
-    }
-  }, []);
 
   return (
     <div className="w-full h-20 shadow-lg flex justify-between items-center">
@@ -22,7 +15,6 @@ const Navbar = () => {
           <ul className="flex justify-around">
             <li>
               <NavLink
-                exact
                 to="/"
                 className={({ isActive }) =>
                   isActive
@@ -57,6 +49,20 @@ const Navbar = () => {
                 Developer
               </NavLink>
             </li>
+            {user.role === "Admin" ? (
+              <li>
+                <NavLink
+                  to="/developer"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-2xl text-white font-medium bg-sky-400 px-2 py-1 rounded-md"
+                      : "text-gray-400 text-2xl font-medium"
+                  }
+                >
+                  Access
+                </NavLink>
+              </li>
+            ) : null}
             <li>
               <NavLink
                 to="/stats"
@@ -69,7 +75,7 @@ const Navbar = () => {
                 Statistics
               </NavLink>
             </li>
-            {user.username === "User" ? (
+            {user.username === "" ? (
               <li>
                 <NavLink
                   to="/signin"
@@ -101,7 +107,7 @@ const Navbar = () => {
       </div>
       <div className="w-1/6">
         <p className="text-4xl font-medium text-center">
-          {user.username ?? "User"}
+          {user.username == "" ? "User" : user.username}
         </p>
       </div>
     </div>

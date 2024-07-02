@@ -5,7 +5,9 @@ const Home = () => {
   return (
     <div className=''>
         <Navbar />
-        Home
+        <div className='w-full mt-8'>
+          
+        </div>
     </div>
   )
 }
