@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../components/Card";
 import InputBox from "../components/InputBox";
 import ToggleTheme from "../components/ToggleTheme";
 import CustomButton from "../components/CustomButton";
 import AlertBox from "../components/AlertBox";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../Hooks/useAuth";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -12,19 +13,26 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [alert, setAlert] = useState({ show: false, success: "", msg: "" });
 
+  const { login } = useAuth();
+
   const route = () => {
     navigate("/signup");
   };
 
-  const submit = () => {
-    console.log("Pressed");
-    setAlert({
-      show: true,
-      status: false,
-      msg: "Please enter valid credentials",
-    });
+  const submit = async () => {
     if (!username || !password) {
-      
+      setAlert({ show: true, success: false, msg: "Fill all credentials" });
+    } 
+    else {
+      const response = await login(username, password); 
+
+      if (response.status) {
+        setAlert({ show: true, success: true, msg: "Login Successful" });
+        setTimeout(() => navigate("/"), 1500);
+      } 
+      else {
+        setAlert({ show: true, success: false, msg: response.msg });
+      }
     }
   };
 
@@ -63,9 +71,8 @@ const SignIn = () => {
               value={username}
               handleTextChange={setUsername}
               titleStyle="text-2xl font-medium"
-              inputStyle="border-2 border-gray-300 focus:border-gray-300 rounded-lg  mt-4 px-2 py-2 text-xl font-regular"
+              inputStyle="border-2 border-gray-300 focus:border-gray-300 rounded-lg mt-4 px-2 py-2 text-xl font-regular"
             />
-
             <InputBox
               title="Enter Password"
               type="password"
@@ -73,15 +80,14 @@ const SignIn = () => {
               value={password}
               handleTextChange={setPassword}
               titleStyle="text-2xl font-medium"
-              inputStyle="border-2 border-gray-300 focus:border-gray-300 rounded-lg  mt-4 px-2 py-2 text-xl font-regular mr-16"
+              inputStyle="border-2 border-gray-300 focus:border-gray-300 rounded-lg mt-4 px-2 py-2 text-xl font-regular mr-16"
             />
             <CustomButton
               title={"Sign In"}
-              textStyle={`text-black bg-sky-400 px-16 py-2 rounded-lg `}
+              textStyle={`text-black bg-sky-400 px-16 py-2 rounded-lg`}
               containerStyle={"flex justify-center item-center cursor-pointer"}
               handleClick={submit}
             />
-
             <p className="mt-2 text-xl font-regular">
               Don't have an account ?{" "}
               <span

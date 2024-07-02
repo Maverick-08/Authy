@@ -3,18 +3,14 @@ import statusCodes from '../config/statusCodes.js';
 import { Users } from '../models/newUser.js';
 
 export const refreshTokenHandler = async (req, res) => {
-    const cookie = req.cookies;
-    // console.log(cookie);
-    // {
-    //     jwt: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyRGF0YSI6eyJ1c2VybmFtZSI6IlZpdmVrIiwicm9sZSI6IlVzZXIifSwiaWF0IjoxNzE5Mzg0OTkzLCJleHAiOjE3MTk0NzEzOTN9.N-zl0dzjq8nK-EP5U_Bbcz-rYuQ1xuCrtaV43pcE97c'
-    // }
+    const cookie = req.body;
 
-    if (!cookie || !cookie.jwt) {
+    if (!cookie ) {
         return res.sendStatus(statusCodes.forbidden);
     }
 
     try {
-        const refreshToken = cookie.jwt;
+        const refreshToken = cookie.refreshToken;
 
         // Match current cookie with the one stored in user record
         const user = await Users.findOne({ refreshToken });
@@ -58,9 +54,9 @@ export const refreshTokenHandler = async (req, res) => {
 
                 await Users.updateOne({ username: user.username }, { refreshToken: newRefreshToken });
                 
-                res.cookie('jwt', newRefreshToken, { httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000 })
+                // res.cookie('jwt', newRefreshToken, { httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000 })
 
-                res.json({ newAccessToken });
+                res.json({ newAccessToken , newRefreshToken});
             }
         )
     }

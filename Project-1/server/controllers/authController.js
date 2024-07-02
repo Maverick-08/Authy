@@ -15,9 +15,13 @@ export const authHandler = async (req, res) => {
         // validate schema
         const isValidPassword = validatePassword(payload.password);
         const isValidUsername = validateUsername(payload.username);
+        
+        if (!isValidUsername.status) {
+            return res.status(statusCodes.unauthorised).json({ msg: isValidUsername.msg});
+        }
 
-        if (!isValidPassword.status || !isValidUsername.status) {
-            return res.status(statusCodes.unauthorised).json({ msg: "User does not exists" });
+        if (!isValidPassword.status) {
+            return res.status(statusCodes.unauthorised).json({ msg: isValidPassword.msg});
         }
 
         const user = await Users.findOne({ username: payload.username });
@@ -61,11 +65,11 @@ export const authHandler = async (req, res) => {
         )
 
         // storing refresh token on client side
-        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000 })
-        // secure: true for production
-        // secure: false for development
+        // res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000 })
+        // // secure: true for production
+        // // secure: false for development
 
-        res.json({ accessToken, msg: "Login successfull" });
+        res.json({ refreshToken, accessToken, role:user.role});
     }
     catch (err) {
         console.log("@authController : " + err.name + "\n" + err.message);
