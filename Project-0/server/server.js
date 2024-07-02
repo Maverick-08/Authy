@@ -1,47 +1,54 @@
 import express from 'express';
 import cors from 'cors';
-import { config } from 'dotenv';
-import status from './config/statusCode.js';
-import RegistrationHandler from './routes/register.js'
-import AuthHandler from './routes/auth.js';
-import DataHandler from './routes/api/data.js';
-import LogoutHandler from './routes/logout.js';
-import verifyJWT from './middleware/verifyToken.js';
-import RefreshToken from './routes/refresh.js';
+import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
-import validToken from './routes/api/check.js'
-import { corsOptions } from './config/corsOptions.js';
-import { credentialsHandler } from './middleware/credentials.js';
+import connect from './config/dbConn.js';
+import Register from './routes/register.js';
+import Authenticate from './routes/auth.js';
+import CheckToken from './routes/checkToken.js';
+import RefreshToken from './routes/refresh.js';
+import Logout from './routes/logout.js';
+import Data from './routes/api/playersData.js';
+import ErrorHandler from './config/errorHandler.js';
+import corsOptions from './config/corsOptions.js';
+import Credentials from './middlewares/credentials.js';
+import { config } from 'dotenv';
+import { verifyTokenHandler } from './middlewares/verifyToken.js';
 
 const app = express();
 
+// MIDDLEWARES
 config();
-app.use(credentialsHandler);
+app.use(Credentials);
+app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cookieParser())
-
-app.use("/register",RegistrationHandler);
-
-app.use("/auth",AuthHandler);
-
-app.use("/refresh",RefreshToken);
-
-app.use(verifyJWT);
-
-app.use("/check",validToken);
-
-app.use("/data",DataHandler);
-
-app.use("/logout",LogoutHandler);
+connect();
 
 
-// Global Error Handler
-app.use((err,req,res,next)=>{
-    console.error(err);
-    res.status(status.internalServerError).json({msg:"Internal server error"});
+// PATHS
+app.use("/register", Register);
+
+app.use("/auth", Authenticate);
+
+app.use("/refresh", RefreshToken);
+
+
+// PROTECTED ROUTES
+app.use(verifyTokenHandler)
+
+app.use("/check", CheckToken);
+
+app.use("/logout", Logout);
+
+app.use("/data", Data);
+
+
+// Global Error function
+app.use(ErrorHandler)
+
+// DATABASE
+mongoose.connection.once('open', () => {
+    console.log("Connected To DB");
+    app.listen(process.env.PORT, () => { console.log("Server is running at port 3000") })
 })
-
-app.listen(process.env.PORT,
-    ()=>{console.log("Server is running at port 3000")}
-)

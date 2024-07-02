@@ -1,58 +1,63 @@
-import fs from 'fs/promises';
 import bcrypt from 'bcrypt';
-import path from 'path';
-import Root from '../config/path.js';
-import statusCodes from '../config/statusCode.js';
 import jwt from 'jsonwebtoken';
+import { Users } from '../models/newUser.js';
+import statusCodes from '../config/statusCodes.js';
+import { validatePassword, validateUsername } from '../validations/userValidations.js';
 
-const authHandler = async (req, res) => {
+export const authHandler = async (req, res) => {
     try {
         const payload = req.body;
 
-        // If username or password data is missing send bad request
         if (!payload.username || !payload.password) {
-            return res.status(statusCodes.badRequest).json({ msg: "Missing username or password" })
+            return res.status(statusCodes.badRequest).json({ msg: "Please fill all the fields" })
         }
 
-        // Check whether the user exists in our database
-        const existingUsersData = JSON.parse(await fs.readFile(path.join(Root, "data", "users.json"), 'utf-8'))
+        // validate schema
+        const isValidPassword = validatePassword(payload.password);
+        const isValidUsername = validateUsername(payload.username);
 
-        const userExists = existingUsersData.find(user => user.username === payload.username)
-
-        // If user does not exist 
-        if (!userExists) {
-            return res.status(statusCodes.unauthorised).json({ msg: "User does not exists" })
+        if (!isValidPassword.status || !isValidUsername.status) {
+            return res.status(statusCodes.unauthorised).json({ msg: "User does not exists" });
         }
 
-        // If user exists in our database match passwords
-        const isPasswordMatching = await bcrypt.compare(payload.password, userExists.password)
-
-        // If password do not match
-        if (!isPasswordMatching) {
-            return res.status(statusCodes.unauthorised).json({ msg: "Incorrect password" })
+        const user = await Users.findOne({ username: payload.username });
+        if (!user) {
+            return res.status(statusCodes.unauthorised).json({ msg: "Invalid username or password" });
         }
 
-        // If password is correct then generate tokens
+        const matchPassword = await bcrypt.compare(payload.password, user.password);
+        if (!matchPassword) {
+            return res.status(statusCodes.unauthorised).json({ msg: "Invalid username or password" });
+        }
+
+        // if username and password matches create access and refresh tokens
         const accessToken = jwt.sign(
             {
                 "userData": {
-                    username: userExists.username,
-                    role: userExists.role
+                    username: user.username,
+                    role: user.role
                 }
             },
             process.env.ACCESS_TOKEN,
-            { expiresIn: "2m" }
+            { expiresIn: '5m' }
         )
 
         const refreshToken = jwt.sign(
             {
                 "userData": {
-                    username: userExists.username,
-                    role: userExists.role
+                    username: user.username,
+                    role: user.role
                 }
             },
             process.env.REFRESH_TOKEN,
-            { expiresIn: "1d" }
+            { expiresIn: '1d' }
+        )
+
+        // store refresh token in user record
+        await Users.updateOne({
+            username: user.username
+        },
+            { refreshToken }
         )
 
         // storing refresh token on client side
@@ -60,19 +65,10 @@ const authHandler = async (req, res) => {
         // secure: true for production
         // secure: false for development
 
-        // storing refresh token in user's record
-        const newUsersData = existingUsersData.filter(user => user.username !== userExists.username);
-
-        newUsersData.push({...userExists,refreshToken})
-
-        await fs.writeFile(path.join(Root, "data", "users.json"), JSON.stringify(newUsersData));
-
-        return res.json({status:true,username:userExists.username,role:userExists.role,accessToken })
+        res.json({ accessToken, msg: "Login successfull" });
     }
     catch (err) {
         console.log("@authController : " + err.name + "\n" + err.message);
-        return res.status(statusCodes.internalServerError).json({ msg: "Internal server error" })
+        res.status(statusCodes.internalServerError).json({ msg: "Internal server error" })
     }
 }
-
-export default authHandler;
