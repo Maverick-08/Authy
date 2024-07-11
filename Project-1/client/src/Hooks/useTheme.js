@@ -15,7 +15,6 @@ const useTheme = () => {
 
     const toggleTheme = ()=>{
         setLightTheme(prev => !prev)
-        console.log(lightTheme);
     }
 
     return [lightTheme, toggleTheme];

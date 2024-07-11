@@ -1,5 +1,6 @@
 import statusCodes from "../config/statusCodes.js";
 import { Players } from "../models/players.js";
+import { validateNewPlayer } from "../validations/playerValidations.js";
 
 export const getAllPlayersData = async (req, res) => {
     try {
@@ -31,6 +32,11 @@ export const getPlayerData = async (req, res) => {
 export const addPlayer = async (req, res) => {
     try {
         const payload = req.body;
+        const response = validateNewPlayer(payload.name, payload.age, payload.team, payload.position, payload.ppg, payload.rpg, payload.apg)
+
+        if(!response.status){
+            return res.status(statusCodes.badRequest).json({msg:response.msg})
+        }
 
         await Players.create(payload);
         return res.status(statusCodes.resourceCreated).json({ msg: "Player added successfully" })

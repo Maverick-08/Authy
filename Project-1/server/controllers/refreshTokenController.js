@@ -3,14 +3,14 @@ import statusCodes from '../config/statusCodes.js';
 import { Users } from '../models/newUser.js';
 
 export const refreshTokenHandler = async (req, res) => {
-    const cookie = req.body;
+    const cookie = req.cookies;
 
-    if (!cookie ) {
+    if (!cookie || !cookie.jwt ) {
         return res.sendStatus(statusCodes.forbidden);
     }
 
     try {
-        const refreshToken = cookie.refreshToken;
+        const refreshToken = cookie.jwt;
 
         // Match current cookie with the one stored in user record
         const user = await Users.findOne({ refreshToken });
@@ -53,10 +53,10 @@ export const refreshTokenHandler = async (req, res) => {
                 )
 
                 await Users.updateOne({ username: user.username }, { refreshToken: newRefreshToken });
-                
-                // res.cookie('jwt', newRefreshToken, { httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000 })
 
-                res.json({ newAccessToken , newRefreshToken});
+                res.cookie('jwt', newRefreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+
+                res.json({newAccessToken});
             }
         )
     }

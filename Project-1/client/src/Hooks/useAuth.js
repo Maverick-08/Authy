@@ -1,166 +1,90 @@
-import axios from 'axios';
 import { useRecoilState } from "recoil";
-import { accessTokenAtom, refreshTokenAtom, userAtom } from "../../context/atoms/userAtom";
+import { handleLogin, handleLogout, getNewAccessToken, isTokenValid } from "../utils/auth";
+import { userAtom } from "../state/userAtom";
 
-const useAuth = () => {
-    const [user, setUser] = useRecoilState(userAtom);
-    const [accessToken, setAccessToken] = useRecoilState(accessTokenAtom);
-    const [refreshToken, setRefreshToken] = useRecoilState(refreshTokenAtom);
+export const useAuth = () => {
+    const [user, setUser] = useRecoilState(userAtom)
 
-    const login = async (username, password) => {
+    const Login = async (username, password) => {
         try {
-            const response = await axios.post("http://localhost:3000/auth", { username, password });
-            const data = response.data;
-
-            console.log(data);
+            const response = await handleLogin(username, password);
 
             const userInfo = {
-                id: data.id,
-                username: data.username,
-                role: data.role
+                id: response.id,
+                username: response.username,
+                role: response.role,
+                accessToken: response.accessToken,
+                isAuthenticated: true
             }
 
             setUser(userInfo);
 
-            setTokens(data.accessToken, data.refreshToken, userInfo);
-
-            return { status: true, msg: "Login Successful" };
-
-        } catch (err) {
-            console.log(err);
-            const errorMsg = err.response?.data?.msg || "Couldn't reach servers";
-            return { status: false, msg: errorMsg };
-        }
-    };
-
-    const register = async (username, password) => {
-        try {
-            const response = await axios.post("http://localhost:3000/register", { username, password });
-            const data = response.data;
-
-            console.log(data);
-
-            setUser({ username, role: data.role, id: data.id });
-
-            return { status: true, msg: "Login Successful" };
-
-        } catch (err) {
-            console.log(err);
-            const errorMsg = err.response?.data?.msg || "Couldn't reach servers";
-            return { status: false, msg: errorMsg };
-        }
-    };
-
-
-
-    const setTokens = (AcessToken, RefreshToken, userInfo = null) => {
-        if (AcessToken) {
-            localStorage.setItem("accessToken", AcessToken);
-            setAccessToken(AcessToken);
-        }
-
-        if (RefreshToken) {
-            localStorage.setItem("refreshToken", RefreshToken);
-            setRefreshToken(RefreshToken);
-        }
-
-        if (userInfo) {
-            localStorage.setItem("id", userInfo.id);
-            localStorage.setItem("username", userInfo.username);
-            localStorage.setItem("role", userInfo.role);
-        }
-    }
-
-    const getTokens = () => {
-        const AccessToken = localStorage.getItem("accessToken");
-        const RefreshToken = localStorage.getItem("refreshToken");
-
-        return { AccessToken, RefreshToken }
-    }
-
-    const getUserInfo = () => {
-        const id = localStorage.getItem("id");
-        const username = localStorage.getItem("username");
-        const role = localStorage.getItem("role");
-
-        return { id, username, role };
-    }
-
-    const isTokenValid = async () => {
-        const Token = getTokens().AccessToken;
-        try {
-            const response = await axios.get("http://localhost:3000/check", {
-                headers: {
-                    'Authorization': `Bearer ${Token}`,
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            return true;
+            return { status: true };
         }
         catch (err) {
-            const errorMsg = err.response?.data?.msg || ""
-            console.log("isToken Valid : " + errorMsg);
+            console.log("@Login : \n" + err);
+            const errMsg = err.response.data?.msg ;
 
-            return false;
+            return { status: false, msg: errMsg ? errMsg : "Internal Server Error"}
         }
     }
 
-    const getNewTokens = async () => {
-        const Token = getTokens().RefreshToken;
+    const Logout = async () => {
         try {
-            const response = await axios.post("http://localhost:3000/refresh", { refreshToken: Token })
+            
+            const response = await checkAuth();
 
-            const data = response.data;
+            if(response.status){
+                const accessToken = user.accessToken;
+            
+                await handleLogout(accessToken);
+            }
 
-            setTokens(data.newAccessToken, data.newRefreshToken)
+            setUser({isAuthenticated:false})
 
-            return true;
+            return { status: true }
         }
         catch (err) {
-            const errorMsg = err.response?.data?.msg || "No msg"
-            console.log("getNewTokens : " + errorMsg);
-
-            return false;
+            console.log("@Logout : \n" + err);
+            return { status: false, msg: "Failed to logout" }
         }
     }
 
-    const isUserValid = async () => {
-        // If yes : He should remain on that page
-        // If No : He should be redirected to signin page
-
-        const isAccessTokenValid = await isTokenValid();
-
-        if (isAccessTokenValid) {
-            const existingAccessToken = getTokens().AccessToken;
-            const existingRefreshToken = getTokens().RefreshToken;
-
-            setUser(getUserInfo());
-            setTokens(existingAccessToken, existingRefreshToken);
-
-            return true;
+    const Register = async (username, password) => {
+        try {
+            const response = await registerNewUser(username, password);
+            return await Login(username, password);
         }
-        else {
+        catch (err) {
+            console.log("@Register : \n" + err);
+            return { status: false }
+        }
+    }
+
+    const checkAuth = async () => {
+        const accessToken = user.accessToken;
+
+        if (accessToken && isTokenValid(accessToken)) {
+            // No need to perform anything
+            return {status: true};
+        }
+        else if (!isTokenValid(accessToken)) {
             try {
-                const response = await getNewTokens();
-                const info = getUserInfo();
-                // console.log("User Info : "+info.id+" "+info.username)
-                setUser(info);
+                const { newAccessToken } = await getNewAccessToken();
 
-                return true;
-            } catch (err) {
-                console.log("isUserValid : " + err);
-                return false;
+                setUser({...user,accessToken: newAccessToken})
+                console.log("Token Rotated");
+                return {status: true}
+            }
+            catch (err) {
+                console.log("@checkAuth : \n" + err);
+                return {status: false}
             }
         }
-
+        else {
+            return {status: false}
+        }
     }
 
-    const logout = () => {
-        localStorage.clear()
-    }
-
-    return { login, register, isUserValid, logout };
-};
-
-export default useAuth;
+    return { Login, Logout, Register, checkAuth }
+}

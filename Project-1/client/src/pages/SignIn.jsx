@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Card from "../components/Card";
 import InputBox from "../components/InputBox";
 import ToggleTheme from "../components/ToggleTheme";
 import CustomButton from "../components/CustomButton";
 import AlertBox from "../components/AlertBox";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../Hooks/useAuth";
+import { useAuth } from "../Hooks/useAuth";
+
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [alert, setAlert] = useState({ show: false, success: "", msg: "" });
 
-  const { login } = useAuth();
+  const {Login} = useAuth();
 
   const route = () => {
     navigate("/signup");
@@ -24,7 +25,7 @@ const SignIn = () => {
       setAlert({ show: true, success: false, msg: "Fill all credentials" });
     } 
     else {
-      const response = await login(username, password); 
+      const response = await Login(username, password); 
 
       if (response.status) {
         setAlert({ show: true, success: true, msg: "Login Successful" });

@@ -8,4 +8,5 @@ const Card = ({children, style}) => {
   )
 }
 
+
 export default Card

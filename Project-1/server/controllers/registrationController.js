@@ -39,12 +39,7 @@ export const registrationHandler = async (req, res) => {
             password: hashedPassword
         })
 
-        res.status(statusCodes.resourceCreated).json({
-            id: newUser.id,
-            username: newUser.username,
-            role: newUser.role,
-            msg: "User created successfully"
-        });
+        res.status(statusCodes.resourceCreated).json({msg:"New User created"});
     }
     catch (err) {
         console.log("@registrationController : " + err.name + "\n" + err.message);

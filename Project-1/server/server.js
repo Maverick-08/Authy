@@ -5,7 +5,6 @@ import cookieParser from 'cookie-parser';
 import connect from './config/dbConn.js';
 import Register from './routes/register.js';
 import Authenticate from './routes/auth.js';
-import CheckToken from './routes/checkToken.js';
 import RefreshToken from './routes/refresh.js';
 import Logout from './routes/logout.js';
 import Data from './routes/api/playersData.js';
@@ -33,11 +32,8 @@ app.use("/auth", Authenticate);
 
 app.use("/refresh", RefreshToken);
 
-
 // PROTECTED ROUTES
 app.use(verifyTokenHandler)
-
-app.use("/check", CheckToken);
 
 app.use("/logout", Logout);
 

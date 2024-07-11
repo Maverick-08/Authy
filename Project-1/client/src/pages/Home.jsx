@@ -1,13 +1,13 @@
 import React from 'react'
-import Navbar from '../components/Navbar'
 
 const Home = () => {
   return (
-    <div className=''>
-        <Navbar />
-        <div className='w-full mt-8'>
-          
-        </div>
+    <div>
+      <div id='About' className='h-[70vh] w-full border-2 border-red-500'>
+
+      </div>
+      <div id='Topics' className='h-[70vh] w-full border-2 border-red-500'></div>
+      <div id='Developer' className='h-[70vh] w-full border-2 border-red-500'></div>
     </div>
   )
 }

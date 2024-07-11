@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Card from "../components/Card";
 import InputBox from "../components/InputBox";
 import ToggleTheme from "../components/ToggleTheme";
 import CustomButton from "../components/CustomButton";
 import AlertBox from "../components/AlertBox";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../Hooks/useAuth";
+import { useAuth } from "../Hooks/useAuth";
+
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const SignUp = () => {
   const [correctPassword, setCorrectPassword] = useState("");
   const [alert, setAlert] = useState({ show: false, success: "", msg: "" });
 
-  const { register } = useAuth();
+  const {Register} = useAuth();
 
   const route = () => {
     navigate("/signin");
@@ -29,11 +30,11 @@ const SignUp = () => {
       setAlert({ show: true, success: false, msg: "Passwords do not match" });
     }
     else {
-      const response = await register(username, correctPassword); 
+      const response = await Register(username, correctPassword); 
 
       if (response.status) {
         setAlert({ show: true, success: true, msg: "Registration Successfull" });
-        setTimeout(() => navigate("/signin"), 1500);
+        setTimeout(() => navigate("/"), 1500);
       } 
       else {
         setAlert({ show: true, success: false, msg: response.msg });

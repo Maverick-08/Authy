@@ -17,11 +17,11 @@ export const authHandler = async (req, res) => {
         const isValidUsername = validateUsername(payload.username);
         
         if (!isValidUsername.status) {
-            return res.status(statusCodes.unauthorised).json({ msg: isValidUsername.msg});
+            return res.status(statusCodes.unauthorised).json({ msg: "Invaild Username or Password"});
         }
 
         if (!isValidPassword.status) {
-            return res.status(statusCodes.unauthorised).json({ msg: isValidPassword.msg});
+            return res.status(statusCodes.unauthorised).json({ msg: "Invaild Username or Password"});
         }
 
         const user = await Users.findOne({ username: payload.username });
@@ -65,11 +65,11 @@ export const authHandler = async (req, res) => {
         )
 
         // storing refresh token on client side
-        // res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: false, maxAge: 24 * 60 * 60 * 1000 })
-        // // secure: true for production
-        // // secure: false for development
+        // res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 }) PRODUCTION
 
-        res.json({ refreshToken, accessToken, role:user.role, id:user.id, username: user.username});
+        res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }) // DEVELOPMENT
+
+        res.json({ accessToken, role:user.role, id:user.id, username: user.username});
     }
     catch (err) {
         console.log("@authController : " + err.name + "\n" + err.message);
