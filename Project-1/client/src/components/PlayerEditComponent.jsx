@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CustomButton from "./CustomButton";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { playerIdsAtom, updatePlayerAtom } from "../state/playerAtom";
+import { highlightPlayerAtom, playerIdsAtom, updatePlayerAtom } from "../state/playerAtom";
 import AlertBox from "../components/AlertBox";
 import shortId from "short-unique-id";
 import { addNewPlayer } from "../utils/data";
@@ -13,6 +13,7 @@ const PlayerEditComponent = () => {
   const [updatePlayerData, setUpdatePlayerData] =
     useRecoilState(updatePlayerAtom);
   const setPlayerIds = useSetRecoilState(playerIdsAtom)
+  const setHighlightPlayer = useSetRecoilState(highlightPlayerAtom)
   const user = useRecoilValue(userAtom);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
@@ -38,6 +39,7 @@ const PlayerEditComponent = () => {
 
   function cancelUpdate() {
     setUpdatePlayerData({});
+    setHighlightPlayer("")
     setName("");
     setAge("");
     setTeam("");

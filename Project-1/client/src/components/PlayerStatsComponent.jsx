@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
+  highlightPlayerAtom,
   playerAtomFamily,
   playerIdsAtom,
   updatePlayerAtom,
@@ -12,7 +13,6 @@ import { userAtom } from "../state/userAtom";
 const PlayerStatsComponent = () => {
   const user = useRecoilValue(userAtom);
   const [playerIds, setPlayerIds] = useRecoilState(playerIdsAtom);
-  const [highlightPlayer, setHighlightPlayer] = useState("");
   const [alert, setAlert] = useState({ show: false, success: false, msg: "" });
 
   useEffect(() => {
@@ -70,8 +70,6 @@ const PlayerStatsComponent = () => {
               <Details
                 playerId={Id}
                 key={Id}
-                highlightPlayer={highlightPlayer}
-                setHighlightPlayer={setHighlightPlayer}
               />
             ))}
           </tbody>
@@ -81,29 +79,27 @@ const PlayerStatsComponent = () => {
   );
 };
 
-const Details = ({ playerId, highlightPlayer, setHighlightPlayer }) => {
+const Details = ({ playerId }) => {
   const player = useRecoilValue(playerAtomFamily(playerId));
   const setUpdatePlayer = useSetRecoilState(updatePlayerAtom);
+  const [highlightPlayer, setHighlightPlayer] = useRecoilState(highlightPlayerAtom)
   const [clickCount, setClickCount] = useState(0);
 
-  const updateClickCount = () => {
-    if (clickCount < 2) {
-      setClickCount(clickCount + 1);
-    } else {
-      setClickCount(0);
-      setUpdatePlayer((prevPlayer) => {
-        if (prevPlayer.id === playerId) {
-          return {};
-        }
-        return playerInfo(playerId);
-      });
-      setHighlightPlayer((prevId) => (prevId === playerId ? "" : playerId));
+  useEffect(()=>{
+    if(clickCount == 2){
+      setHighlightPlayer(playerId)
+      const player = playerInfo(playerId);
+      setUpdatePlayer({...player})
     }
-  };
+    if(clickCount > 2){
+      setClickCount(0)
+      setHighlightPlayer("")
+    }
+  },[clickCount])
 
   return (
     <tr
-      onClick={updateClickCount}
+      onClick={()=>setClickCount(clickCount+1)}
       className={`${
         highlightPlayer === playerId ? "bg-sky-100" : "hover:bg-sky-50"
       } cursor-pointer`}

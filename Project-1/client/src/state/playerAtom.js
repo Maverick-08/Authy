@@ -18,3 +18,8 @@ export const playerIdsAtom = atom({
     key:"playerIdsAtom",
     default: []
 })
+
+export const highlightPlayerAtom = atom({
+    key: "highlightedPlayerAtom",
+    default: ""
+})
