@@ -3,6 +3,7 @@ import { useRecoilValue } from "recoil";
 import { userAtom } from "../state/userAtom";
 import Card from "../components/Card";
 import profile from "../assets/images/profile.jpg";
+import CustomButton from "../components/CustomButton";
 import { jwtDecode } from "jwt-decode";
 
 const Profile = () => {
@@ -18,7 +19,6 @@ const Profile = () => {
       setTokenExpTime(timeDiff);
     };
 
-    // calculateTimeDifference(); // Call immediately to set the initial value
     const intervalId = setInterval(calculateTimeDifference, 1000);
 
     return () => {
@@ -57,6 +57,36 @@ const Profile = () => {
               </span>
             </p>
           </div>
+        </div>
+        <div>
+          {user.role === "User" ? (
+            <div className="flex items-center gap-8 mt-8">
+              <CustomButton
+                title={"Request Editor Access"}
+                textStyle={"text-xl text-black"}
+                containerStyle={
+                  "bg-purple-400 px-4 py-2 rounded-md cursor-pointer"
+                }
+              />
+              <CustomButton
+                title={"Request Admin Access"}
+                textStyle={"text-xl text-black"}
+                containerStyle={
+                  "bg-purple-400 px-4 py-2 rounded-md cursor-pointer"
+                }
+              />
+            </div>
+          ) : user.role === "Editor" ? (
+            <div>
+              <CustomButton
+                title={"Request Admin Access"}
+                textStyle={"text-xl text-black"}
+                containerStyle={
+                  "bg-purple-400 px-4 py-2 rounded-md cursor-pointer"
+                }
+              />
+            </div>
+          ) : null}
         </div>
       </Card>
     </div>

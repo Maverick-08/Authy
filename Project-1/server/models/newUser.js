@@ -13,7 +13,11 @@ const newUserSchema = new Schema({
         type: String,
         default: "User"
     },
-    refreshToken: String 
+    refreshToken: String,
+    requestingAccess:{
+        type: String,
+        default: null
+    }
 }, { 
     timestamps: true,
     collection: 'Users'  // This will set the collection name to 'Users'

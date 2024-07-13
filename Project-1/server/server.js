@@ -8,6 +8,7 @@ import Authenticate from './routes/auth.js';
 import RefreshToken from './routes/refresh.js';
 import Logout from './routes/logout.js';
 import Data from './routes/api/playersData.js';
+import Access from './routes/access.js';
 import ErrorHandler from './config/errorHandler.js';
 import corsOptions from './config/corsOptions.js';
 import Credentials from './middlewares/credentials.js';
@@ -39,6 +40,7 @@ app.use("/logout", Logout);
 
 app.use("/data", Data);
 
+app.use("/access", Access);
 
 // Global Error function
 app.use(ErrorHandler)

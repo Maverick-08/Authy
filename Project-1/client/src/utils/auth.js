@@ -44,3 +44,7 @@ export const isTokenValid = (token) => {
     const decodedToken = jwtDecode(token);
     return decodedToken.exp > (Date.now() / 1000);
 }
+
+export const upgradeAccess = (accessLevel) => {
+    
+}
