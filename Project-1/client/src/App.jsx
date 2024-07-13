@@ -6,11 +6,10 @@ import Stats from "./pages/Stats";
 import Access from "./pages/Dashboard";
 import { RecoilRoot } from "recoil";
 
-// import MainLayout from "./layouts/MainLayout";
-
 import AuthLayout from "./layouts/AuthLayout";
 import MainLayout from "./layouts/MainLayout";
 import PromptLogin from "./components/PromptLogin";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -26,6 +25,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/stats" element={<Stats />} />
                 <Route path="/access" element={<Access />} />
+                <Route path="/profile" element={<Profile />} />
               </Route>
             </Route>
             

@@ -1,5 +1,5 @@
 import { useRecoilState } from "recoil";
-import { handleLogin, handleLogout, getNewAccessToken, isTokenValid } from "../utils/auth";
+import { handleLogin, handleLogout, getNewAccessToken, isTokenValid, registerNewUser } from "../utils/auth";
 import { userAtom } from "../state/userAtom";
 
 export const useAuth = () => {

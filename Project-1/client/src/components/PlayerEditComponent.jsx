@@ -1,19 +1,35 @@
 import React, { useEffect, useState } from "react";
 import CustomButton from "./CustomButton";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { highlightPlayerAtom, playerIdsAtom, updatePlayerAtom } from "../state/playerAtom";
+import {
+  atomFamily,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from "recoil";
+import {
+  highlightPlayerAtom,
+  playerAtomFamily,
+  playerIdsAtom,
+  updatePlayerAtom,
+} from "../state/playerAtom";
 import AlertBox from "../components/AlertBox";
 import shortId from "short-unique-id";
-import { addNewPlayer } from "../utils/data";
+import { addNewPlayer, updatePlayerDetails } from "../utils/data";
 import { userAtom } from "../state/userAtom";
+import PlayerDetails from "./PlayerDetails";
 
 const uid = new shortId({ length: 10 });
 
 const PlayerEditComponent = () => {
   const [updatePlayerData, setUpdatePlayerData] =
     useRecoilState(updatePlayerAtom);
-  const setPlayerIds = useSetRecoilState(playerIdsAtom)
-  const setHighlightPlayer = useSetRecoilState(highlightPlayerAtom)
+  const setPlayerIds = useSetRecoilState(playerIdsAtom);
+  const setHighlightPlayer = useSetRecoilState(highlightPlayerAtom);
+  let setSelectedAtom;
+  if (updatePlayerData.id) {
+    setSelectedAtom = useSetRecoilState(playerAtomFamily(updatePlayerData.id));
+  }
+
   const user = useRecoilValue(userAtom);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
@@ -26,7 +42,6 @@ const PlayerEditComponent = () => {
 
   useEffect(() => {
     if (updatePlayerData.id) {
-      console.log(updatePlayerData);
       setName(updatePlayerData.name);
       setAge(updatePlayerData.age);
       setTeam(updatePlayerData.team);
@@ -39,7 +54,7 @@ const PlayerEditComponent = () => {
 
   function cancelUpdate() {
     setUpdatePlayerData({});
-    setHighlightPlayer("")
+    setHighlightPlayer("");
     setName("");
     setAge("");
     setTeam("");
@@ -50,6 +65,14 @@ const PlayerEditComponent = () => {
   }
 
   async function addPlayer() {
+    if (user.role === "User") {
+      setAlert({
+        show: true,
+        success: false,
+        msg: "You do not have editior access",
+      });
+      return;
+    }
     if (
       name === "" ||
       age === "" ||
@@ -85,17 +108,64 @@ const PlayerEditComponent = () => {
           success: true,
           msg: "New player added successfully",
         });
-        setPlayerIds(prev => [...prev,newId])
-        const existingPlayersData = JSON.parse(localStorage.getItem("playersInfo"))
-        localStorage.setItem("playersInfo",JSON.stringify([...existingPlayersData,payload]))
+        setPlayerIds((prev) => [...prev, newId]);
+        const existingPlayersData = JSON.parse(
+          localStorage.getItem("playersInfo")
+        );
+        localStorage.setItem(
+          "playersInfo",
+          JSON.stringify([...existingPlayersData, payload])
+        );
       } else {
         setAlert({ show: true, success: false, msg: response.msg });
       }
     }
   }
-
+  async function updatePlayerInfo() {
+    const prevValue = updatePlayerData;
+    const updatedValue = {
+      id: updatePlayerData.id,
+      name,
+      team,
+      position,
+      age: parseInt(age),
+      ppg: parseFloat(ppg),
+      apg: parseFloat(apg),
+      rpg: parseFloat(rpg),
+    };
+    if (
+      prevValue.name == updatedValue.name &&
+      prevValue.position == updatedValue.position &&
+      prevValue.team == updatedValue.team &&
+      prevValue.age == updatedValue.age &&
+      prevValue.ppg == updatedValue.ppg &&
+      prevValue.apg == updatedValue.apg &&
+      prevValue.rpg == updatedValue.rpg
+    ) {
+      setAlert({
+        show: true,
+        success: false,
+        msg: "Change values for updation",
+      });
+    } else {
+      const response = await updatePlayerDetails(
+        user.accessToken,
+        updatedValue
+      );
+      if (response.status) {
+        setSelectedAtom({ ...updatedValue });
+        setAlert({
+          show: true,
+          success: true,
+          msg: "Player updated successfully",
+        });
+      } else {
+        setAlert({ show: true, success: false, msg: response.msg });
+      }
+    }
+  }
   return (
-    <div className="w-full h-[55vh] flex items-center flex-col pt-20">
+    <div className={`w-full h-[55vh] flex items-center flex-col pt-20`}>
       {alert.show && (
         <AlertBox
           success={alert.success}
@@ -106,57 +176,49 @@ const PlayerEditComponent = () => {
       <p className="text-4xl font-normal text-gray-400 mt-4">
         Edit Player Data
       </p>
-      <div className="border-2 border-gray-200 pd-16 shadow-lg shadow-sky-200 my-8">
-        <div className="flex flex-col items-center gap-8 my-8">
-          <div className="flex gap-3">
-            <input
-              type="text"
-              placeholder="Enter Name"
-              className="text-center py-2"
+      <div
+        className={`border-2 border-gray-200 pd-16 shadow-lg shadow-sky-200 my-8 ${
+          user.role === "User" ? "cursor-not-allowed" : ""
+        }`}
+      >
+        <div className="flex flex-col items-center gap-8 my-8 px-2">
+          <div className="flex gap-4">
+            <PlayerDetails
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              id={"name"}
+              onTextChange={setName}
+              title={"Player Name : "}
             />
-            <input
-              type="text"
-              placeholder="Team"
-              className="text-center"
+            <PlayerDetails
               value={team}
-              onChange={(e) => setTeam(e.target.value)}
+              id={"team"}
+              onTextChange={setTeam}
+              title={"Team Name : "}
             />
-            <input
-              type="text"
-              placeholder="Enter Age"
-              className="text-center"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-            />
-            <input
-              type="text"
-              placeholder="Position"
-              className="text-center"
+            <PlayerDetails value={age} onTextChange={setAge} title={"Age : "} />
+            <PlayerDetails
               value={position}
-              onChange={(e) => setPosition(e.target.value)}
+              id={"position"}
+              onTextChange={setPosition}
+              title={"Position : "}
             />
-            <input
-              type="text"
-              placeholder="PPG"
-              className="text-center"
+            <PlayerDetails
               value={ppg}
-              onChange={(e) => setppg(e.target.value)}
+              id={"ppg"}
+              onTextChange={setppg}
+              title={"PPG : "}
             />
-            <input
-              type="text"
-              placeholder="RPG"
-              className="text-center"
+            <PlayerDetails
               value={rpg}
-              onChange={(e) => setrpg(e.target.value)}
+              id={"rpg"}
+              onTextChange={setrpg}
+              title={"RPG : "}
             />
-            <input
-              type="text"
-              placeholder="APG"
-              className="text-center"
+            <PlayerDetails
               value={apg}
-              onChange={(e) => setapg(e.target.value)}
+              id={"apg"}
+              onTextChange={setapg}
+              title={"APG : "}
             />
           </div>
           {updatePlayerData.id ? (
@@ -167,6 +229,7 @@ const PlayerEditComponent = () => {
                 containerStyle={
                   "bg-[#6A43C7] px-4 py-2 rounded-md cursor-pointer "
                 }
+                handleClick={updatePlayerInfo}
               />
               <CustomButton
                 title={"Cancel Update"}
@@ -189,7 +252,9 @@ const PlayerEditComponent = () => {
               title={"Add Player"}
               textStyle={"text-white "}
               containerStyle={
-                "bg-[#6A43C7] px-4 py-2 rounded-md cursor-pointer "
+                `bg-[#6A43C7] px-4 py-2 rounded-md ${
+                  user.role === "User" ? "cursor-not-allowed" : "cursor-pointer"
+                }`
               }
               handleClick={addPlayer}
             />

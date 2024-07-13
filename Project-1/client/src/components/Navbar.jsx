@@ -2,13 +2,24 @@ import React from "react";
 import { useRecoilValue } from "recoil";
 import { userAtom } from "../state/userAtom";
 import { Link } from "react-scroll";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../Hooks/useAuth";
 
 const Navbar = () => {
   const user = useRecoilValue(userAtom);
+  const { Logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location);
+  // {pathname: '/stats', search: '', hash: '', state: null, key: 'jidvbbg7'}
+
+  async function logoutUser() {
+    await Logout();
+    navigate("/");
+  }
 
   return (
-    <div className="fixed w-full h-16 shadow-md flex justify-center items-center">
+    <div className="fixed w-full h-16 shadow-md flex justify-center items-center z-10">
       <div className="w-full flex justify-between items-center px-16">
         <div className="mx-32">
           {user.isAuthenticated ? (
@@ -30,46 +41,56 @@ const Navbar = () => {
         <div className="">
           <ul className="flex justify-around items-center gap-8">
             <li className="text-xl px-4 py-2 rounded-md text-gray-500 cursor-pointer">
-              <Link to="About" smooth={true} duration={500}>
-                About
-              </Link>
+              {location.pathname == "/" ? (
+                <Link to="About" smooth={true} duration={500}>
+                  About
+                </Link>
+              ) : (
+                <NavLink to={"/"}>About</NavLink>
+              )}
             </li>
 
             <li className="text-xl px-4 py-2 rounded-md text-gray-500 cursor-pointer">
-              <Link to="Topics" smooth={true} duration={500}>
-                Topics
-              </Link>
+              {location.pathname == "/" ? (
+                <Link to="Topics" smooth={true} duration={500}>
+                  Topics
+                </Link>
+              ) : (
+                <NavLink to={"/"}>Topics</NavLink>
+              )}
             </li>
 
             <li className="text-xl px-4 py-2 rounded-md text-gray-500  cursor-pointer">
-              <Link to="Developer" smooth={true} duration={500}>
-                Developer
-              </Link>
+              {location.pathname === "/" ? (
+                <Link to="Developer" smooth={true} duration={500}>
+                  Developer
+                </Link>
+              ) : (
+                <NavLink to={"/"}>Developer</NavLink>
+              )}
             </li>
 
             <li className="text-xl px-4 py-2 rounded-md text-gray-500  cursor-pointer">
-              <NavLink to="/stats" target="_blank">
-                Statistics
-              </NavLink>
+              <NavLink to="/stats">Statistics</NavLink>
             </li>
 
-            {user.role === "Admin" ? (
+            {user.isAuthenticated ? (
               <li className="text-xl px-4 py-2 rounded-md text-gray-500 cursor-pointer">
-                <NavLink to="/dashboard"  target="_blank">
-                  Dashboard
-                </NavLink>
+                {user.role === "Admin" ? (
+                  <NavLink to="/dashboard">Dashboard</NavLink>
+                ) : (
+                  <NavLink to={"/profile"}>Profile</NavLink>
+                )}
               </li>
             ) : null}
 
             {user.isAuthenticated ? (
               <li className="text-xl px-4 py-2 font-medium text-[#6A43C7] cursor-pointer">
-                <NavLink to="/signout">Logout</NavLink>
+                <span onClick={logoutUser}>Logout</span>
               </li>
             ) : (
               <li className="text-xl px-4 py-2 rounded-md text-white bg-[#6A43C7] cursor-pointer">
-                <NavLink to="/signin" >
-                  Login
-                </NavLink>
+                <NavLink to="/signin">Login</NavLink>
               </li>
             )}
           </ul>

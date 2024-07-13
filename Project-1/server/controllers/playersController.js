@@ -51,14 +51,14 @@ export const updatePlayer = async (req, res) => {
     try {
         const payload = req.body;
 
-        const playerExists = await Players.findOne({ _id: payload._id });
+        const playerExists = await Players.findOne({ id: payload.id });
 
         if (!playerExists) {
 
             return res.json({ msg: "Failed to update, player does not exist." })
         }
 
-        await Players.updateOne({ _id: payload._id }, { ...payload });
+        await Players.updateOne({ id: payload.id }, { ...payload });
         return res.json({ msg: "Player updated successfully" })
 
     }

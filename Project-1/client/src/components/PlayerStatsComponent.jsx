@@ -70,6 +70,8 @@ const PlayerStatsComponent = () => {
               <Details
                 playerId={Id}
                 key={Id}
+                setAlert={setAlert}
+                role={user.role}
               />
             ))}
           </tbody>
@@ -79,21 +81,28 @@ const PlayerStatsComponent = () => {
   );
 };
 
-const Details = ({ playerId }) => {
+const Details = ({ playerId, setAlert, role }) => {
   const player = useRecoilValue(playerAtomFamily(playerId));
   const setUpdatePlayer = useSetRecoilState(updatePlayerAtom);
   const [highlightPlayer, setHighlightPlayer] = useRecoilState(highlightPlayerAtom)
   const [clickCount, setClickCount] = useState(0);
 
   useEffect(()=>{
-    if(clickCount == 2){
-      setHighlightPlayer(playerId)
-      const player = playerInfo(playerId);
-      setUpdatePlayer({...player})
+    if(role === "Editor" || role === "Admin"){
+      if(clickCount == 2){
+        setHighlightPlayer(playerId)
+        const player = playerInfo(playerId);
+        setUpdatePlayer({...player})
+      }
+      if(clickCount > 2){
+        setClickCount(0)
+        setHighlightPlayer("")
+      }
     }
-    if(clickCount > 2){
-      setClickCount(0)
-      setHighlightPlayer("")
+    else{
+      if(clickCount != 0){
+        setAlert({show:true,success:false,msg:"You do not have editior access"})
+      }
     }
   },[clickCount])
 

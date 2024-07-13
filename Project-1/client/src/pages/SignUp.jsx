@@ -22,12 +22,14 @@ const SignUp = () => {
   };
 
   const submit = async () => {
-    if (!username || !password) {
+    if ( !username || !password) {
       setAlert({ show: true, success: false, msg: "Fill all credentials" });
+      return
     } 
 
     if(password !== correctPassword){
       setAlert({ show: true, success: false, msg: "Passwords do not match" });
+      return;
     }
     else {
       const response = await Register(username, correctPassword); 

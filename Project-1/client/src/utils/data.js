@@ -54,3 +54,28 @@ export const addNewPlayer = async (accessToken,payload) => {
     return { status: false, msg: errMsg };
   }
 }
+
+export const updatePlayerDetails = async (accessToken,payload) => {
+  try{
+    const response = await axios.put("http://localhost:3000/data",payload,{
+      headers:{
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      withCredentials: true
+    })
+    const existingPlayersData = JSON.parse(localStorage.getItem("playersInfo"))
+    let newPlayersData = existingPlayersData.filter(player => player.id != payload.id);
+    newPlayersData.push(payload);
+
+    localStorage.setItem("playersInfo",JSON.stringify(newPlayersData));
+
+    return {status:true}
+  }
+  catch(err){
+    console.log("@updatePlayerDetails : \n"+err);
+    const errMsg = err.response.data.msg;
+
+    return {status:false,msg:errMsg}
+  }
+}
