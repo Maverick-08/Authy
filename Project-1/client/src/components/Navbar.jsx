@@ -10,7 +10,7 @@ const Navbar = () => {
   const { Logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
+  // console.log(location);
   // {pathname: '/stats', search: '', hash: '', state: null, key: 'jidvbbg7'}
 
   async function logoutUser() {

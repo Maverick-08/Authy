@@ -7,7 +7,7 @@ const MessageBox = ({ success, msg , onClose}) => {
     <div
       className={`fixed top-4 left-1/2 transform -translate-x-1/2 h-16 flex items-center px-4 bg-white shadow-lg rounded-lg cursor-pointer ${
         success ? 'border-green-500' : 'border-red-500'
-      } border-2`}
+      } border-2 z-20`}
       onClick={onClose}
     >
       {success ? (
