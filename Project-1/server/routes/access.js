@@ -3,7 +3,7 @@ import { accessLevelHandler, grantAccessHandler } from '../controllers/accessCon
 
 const router = express.Router();
 
-router.get("/", accessLevelHandler)
-router.get("/grant", grantAccessHandler)
+router.post("/", accessLevelHandler)
+router.post("/grant", grantAccessHandler)
 
 export default router;

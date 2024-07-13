@@ -45,6 +45,42 @@ export const isTokenValid = (token) => {
     return decodedToken.exp > (Date.now() / 1000);
 }
 
-export const upgradeAccess = (accessLevel) => {
-    
+export const upgradeAccess = async (accessToken, userId, requestingAccess) => {
+    try{
+        const payload = {userId, requestingAccess};
+
+        await axios.post("http://localhost:3000/access",payload,{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        })
+
+        return true;
+    }
+    catch(err){
+        console.log("@upgradeAccess : \n"+err);
+        return false;
+    }
+}
+
+export const grantAccess = async (accessToken, userId, grantRole, requestStatus) => {
+    try{
+        const payload = {userId,grantRole, requestStatus};
+
+        await axios.post("http://localhost:3000/access/grant",payload,{
+            headers:{
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        })
+
+        return true;
+    }
+    catch(err){
+        console.log("@grantAccess : \n"+err);
+        return false;
+    }
 }

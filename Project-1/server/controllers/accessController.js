@@ -46,7 +46,7 @@ export const accessLevelHandler = async (req,res) => {
 
 export const grantAccessHandler = async (req,res) => {
     try{
-        const payload = req.body; // {userId: "",grantRequest: true/false,grantRole: ""}
+        const payload = req.body; // {userId: "",requestStatus: true/false,grantRole: ""}
 
         const user = Users.findOne({id: payload.userId});
 
@@ -54,7 +54,7 @@ export const grantAccessHandler = async (req,res) => {
             return res.status(statusCodes.badRequest).json({msg:"Invalid user id"})
         }
 
-        if(payload.grantRequest){
+        if(payload.requestStatus){
             await Users.updateOne({id: payload.userId},{role: payload.grantRole, requestingAccess: null})
 
             let existingNotifications = (await Notifications.findOne({id: payload.userId})).notifications;
