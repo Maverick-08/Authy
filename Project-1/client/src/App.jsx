@@ -29,8 +29,10 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
               </Route>
             </Route>
-            
-            <Route path="/prompt" element={<PromptLogin />}/>
+
+            <Route element={<MainLayout />}>
+              <Route path="/prompt" element={<PromptLogin />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </RecoilRoot>
