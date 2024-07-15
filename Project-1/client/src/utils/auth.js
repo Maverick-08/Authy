@@ -1,5 +1,8 @@
 import axios from "axios";
-import { jwtDecode } from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode';
+import ShortUniqueId from "short-unique-id";
+
+const uid = new ShortUniqueId({length:10})
 
 export const handleLogin = async (username, password) => {
     const response = await axios.post("http://localhost:3000/auth",
@@ -24,7 +27,7 @@ export const handleLogout = async (accessToken) => {
 }
 
 export const registerNewUser = async (username, password) => {
-    const payload = { username, password };
+    const payload = { username, password, id: uid.rnd()};
 
     const response = await axios.post("http://localhost:3000/register", payload);
 
@@ -57,11 +60,13 @@ export const upgradeAccess = async (accessToken, userId, requestingAccess) => {
             withCredentials: true
         })
 
-        return true;
+        return {status:true}
     }
     catch(err){
         console.log("@upgradeAccess : \n"+err);
-        return false;
+
+        const errMsg = err.response.data.msg;
+        return {status:false, msg:errMsg};
     }
 }
 

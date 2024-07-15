@@ -36,10 +36,10 @@ const Profile = () => {
       requestingAccess
     );
 
-    if (response.data) {
+    if (response.status) {
         setAlert({show:true,success:true,msg:"Request has been sent to Admin"})
     } else {
-        setAlert({show:true,success:false,msg:"Failed to send request"})
+        setAlert({show:true,success:false,msg:response.msg})
     }
   };
 

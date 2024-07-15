@@ -7,7 +7,7 @@ export const registrationHandler = async (req, res) => {
     try {
         const payload = req.body;
 
-        if (!payload.username || !payload.password) {
+        if (!payload.username || !payload.password || !payload.id) {
             return res.status(statusCodes.badRequest).json({ msg: "Please fill all the fields" });
         }
 
@@ -36,7 +36,8 @@ export const registrationHandler = async (req, res) => {
 
         const newUser = await Users.create({
             username: payload.username,
-            password: hashedPassword
+            password: hashedPassword,
+            id: payload.id
         })
 
         res.status(statusCodes.resourceCreated).json({msg:"New User created"});
