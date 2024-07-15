@@ -46,7 +46,7 @@ export const accessLevelHandler = async (req,res) => {
 export const grantAccessHandler = async (req,res) => {
     try{
         const payload = req.body; // {userId: "",requestStatus: true/false,grantRole: ""}
-
+        console.log(payload);
         const user = Users.findOne({id: payload.userId});
 
         if(!user){
@@ -58,27 +58,36 @@ export const grantAccessHandler = async (req,res) => {
 
             let existingNotifications = (await Notifications.findOne({id: payload.userId})).notifications;
 
-            existingNotifications.unshift(`${grantRole} access has been granted`)
+            existingNotifications.unshift(`${payload.grantRole} access has been granted`)
 
             await Notifications.updateOne({id: payload.userId},{notifications: existingNotifications})
-
-            return res.sendStatus(statusCodes.noContent)
         }
         else{
             await Users.updateOne({id: payload.userId},{requestingAccess: null})
 
             let existingNotifications = (await Notifications.findOne({id: payload.userId})).notifications;
 
-            existingNotifications.unshift(`Request for ${grantRole} access has been declined`)
+            existingNotifications.unshift(`Request for ${payload.grantRole} access has been declined`)
 
             await Notifications.updateOne({id: payload.userId},{notifications: existingNotifications})
-
-            return res.sendStatus(statusCodes.noContent)
         }
 
+        return res.sendStatus(statusCodes.noContent)
     }
     catch(err){
         console.log("@grantAccessHandler : \n"+err);
         return res.status(statusCodes.internalServerError).json({msg: err.name})
+    }
+}
+
+export const userAccessList = async (req, res) => {
+    try{
+        const usersList = await Users.find({ requestingAccess: { $ne: null } });
+
+        return res.json({users:usersList})
+    }
+    catch(err){
+        console.log("@userAccessList : \n"+err);
+        return res.status(statusCodes.internalServerError)
     }
 }
