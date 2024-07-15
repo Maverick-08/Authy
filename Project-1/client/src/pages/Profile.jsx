@@ -78,7 +78,7 @@ const Profile = () => {
             <p className="text-2xl font-normal text-gray-400">
               Access Level :{" "}
               <span className="text-2xl font-normal text-black">
-                {user.role}
+                {user.role} Level
               </span>
             </p>
           </div>

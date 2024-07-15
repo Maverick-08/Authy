@@ -2,7 +2,7 @@ import axios from "axios";
 import { jwtDecode } from 'jwt-decode';
 import ShortUniqueId from "short-unique-id";
 
-const uid = new ShortUniqueId({length:10})
+const uid = new ShortUniqueId({ length: 10 })
 
 export const handleLogin = async (username, password) => {
     const response = await axios.post("http://localhost:3000/auth",
@@ -15,19 +15,19 @@ export const handleLogin = async (username, password) => {
 
 export const handleLogout = async (accessToken) => {
 
-    await axios.get("http://localhost:3000/logout",{
-        headers:{
+    await axios.get("http://localhost:3000/logout", {
+        headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': `application/json`
         },
         withCredentials: true
     });
 
-    return ;
+    return;
 }
 
 export const registerNewUser = async (username, password) => {
-    const payload = { username, password, id: uid.rnd()};
+    const payload = { username, password, id: uid.rnd() };
 
     const response = await axios.post("http://localhost:3000/register", payload);
 
@@ -36,7 +36,7 @@ export const registerNewUser = async (username, password) => {
 
 export const getNewAccessToken = async () => {
 
-    const response = await axios.get("http://localhost:3000/refresh",{
+    const response = await axios.get("http://localhost:3000/refresh", {
         withCredentials: true
     })
 
@@ -49,33 +49,33 @@ export const isTokenValid = (token) => {
 }
 
 export const upgradeAccess = async (accessToken, userId, requestingAccess) => {
-    try{
-        const payload = {userId, requestingAccess};
+    try {
+        const payload = { userId, requestingAccess };
 
-        await axios.post("http://localhost:3000/access",payload,{
-            headers:{
+        await axios.post("http://localhost:3000/access", payload, {
+            headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
             },
             withCredentials: true
         })
 
-        return {status:true}
+        return { status: true }
     }
-    catch(err){
-        console.log("@upgradeAccess : \n"+err);
+    catch (err) {
+        console.log("@upgradeAccess : \n" + err);
 
         const errMsg = err.response.data.msg;
-        return {status:false, msg:errMsg};
+        return { status: false, msg: errMsg };
     }
 }
 
 export const grantAccess = async (accessToken, userId, grantRole, requestStatus) => {
-    try{
-        const payload = {userId,grantRole, requestStatus};
+    try {
+        const payload = { userId, grantRole, requestStatus };
 
-        await axios.post("http://localhost:3000/access/grant",payload,{
-            headers:{
+        await axios.post("http://localhost:3000/access/grant", payload, {
+            headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'
             },
@@ -84,8 +84,28 @@ export const grantAccess = async (accessToken, userId, grantRole, requestStatus)
 
         return true;
     }
-    catch(err){
-        console.log("@grantAccess : \n"+err);
+    catch (err) {
+        console.log("@grantAccess : \n" + err);
         return false;
+    }
+}
+
+export const fetchNotifications = async (accessToken, userId) => {
+    try {
+        const response = await axios.get(`http://localhost:3000/notifications/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        })
+
+        const notifications = response.data.notifications;
+
+        return {status:true, notifications}
+    }
+    catch (err) {
+        console.log("@fetchNotification : \n" + err);
+        return {status:false};
     }
 }

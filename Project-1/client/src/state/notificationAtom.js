@@ -8,3 +8,8 @@ export const alertAtom = atom({
         msg: ""
     }
 })
+
+export const userNotificationsAtom = atom({
+    key: "userNotificationsAtom",
+    default: []
+})

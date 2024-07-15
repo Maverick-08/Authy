@@ -4,6 +4,7 @@ import { userAtom } from "../state/userAtom";
 import { Link } from "react-scroll";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../Hooks/useAuth";
+import Notifications from "./Notifications";
 
 const Navbar = () => {
   const user = useRecoilValue(userAtom);
@@ -23,12 +24,15 @@ const Navbar = () => {
       <div className="w-full flex justify-between items-center px-16">
         <div className="mx-32">
           {user.isAuthenticated ? (
-            <p
-              title={user.role}
-              className="text-4xl font-normal font-mono px-2 cursor-pointer"
-            >
-              {user.username}
-            </p>
+            <div className="flex gap-2 items-center">
+              <Notifications accessToken={user.accessToken} userId={user.id} />
+              <p
+                title={user.role + " level access"}
+                className="text-4xl font-normal font-mono px-2 cursor-pointer"
+              >
+                {user.username}
+              </p>
+            </div>
           ) : (
             <p
               title={user.role}

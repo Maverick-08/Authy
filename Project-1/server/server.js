@@ -12,6 +12,7 @@ import Access from './routes/access.js';
 import ErrorHandler from './config/errorHandler.js';
 import corsOptions from './config/corsOptions.js';
 import Credentials from './middlewares/credentials.js';
+import Notifications from "./routes/api/notifications.js"
 import { config } from 'dotenv';
 import { verifyTokenHandler } from './middlewares/verifyToken.js';
 
@@ -41,6 +42,8 @@ app.use("/logout", Logout);
 app.use("/data", Data);
 
 app.use("/access", Access);
+
+app.use("/notifications", Notifications);
 
 // Global Error function
 app.use(ErrorHandler)
