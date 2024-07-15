@@ -37,9 +37,13 @@ const Profile = () => {
     );
 
     if (response.status) {
-        setAlert({show:true,success:true,msg:"Request has been sent to Admin"})
+      setAlert({
+        show: true,
+        success: true,
+        msg: "Request has been sent to Admin",
+      });
     } else {
-        setAlert({show:true,success:false,msg:response.msg})
+      setAlert({ show: true, success: false, msg: response.msg });
     }
   };
 
@@ -61,25 +65,35 @@ const Profile = () => {
           />
           <p className="text-4xl font-light">{user.username}</p>
         </div>
+
         <div className=" mt-8">
-          <div className="text-2xl text-gray-400 font-normal flex gap-4 justify-center items-center">
-            Access Token: <DisplayExpTime timeDiff={tokenExpTime} />
+          <div className="mt-2">
+            <p className="text-2xl font-normal text-gray-400">
+              User Id :{"  "}
+              <span className="text-2xl font-normal text-black">{user.id}</span>
+            </p>
           </div>
+
+          <div className="mt-2">
+            <p className="text-2xl font-normal text-gray-400">
+              Access Level :{" "}
+              <span className="text-2xl font-normal text-black">
+                {user.role}
+              </span>
+            </p>
+          </div>
+
           <div className="mt-2">
             <p className="text-2xl font-normal text-gray-400">
               Authentication Status:{" "}
-              <span className="text-xl font-normal text-black">
+              <span className="text-2xl font-normal text-black">
                 {user.isAuthenticated ? "Authenticated" : "Logged Out"}
               </span>
             </p>
           </div>
-          <div className="mt-2">
-            <p className="text-2xl font-normal text-gray-400">
-              Access Level :{" "}
-              <span className="text-xl font-normal text-black">
-                {user.role}
-              </span>
-            </p>
+
+          <div className="text-2xl text-gray-400 font-normal flex gap-8 mt-4 items-center">
+            Access Token: <DisplayExpTime timeDiff={tokenExpTime} />
           </div>
         </div>
         <div>
@@ -89,17 +103,17 @@ const Profile = () => {
                 title={"Request Editor Access"}
                 textStyle={"text-xl text-black"}
                 containerStyle={
-                  "bg-purple-400 px-4 py-2 rounded-md cursor-pointer"
+                  "bg-purple-400 px-4 py-5 rounded-md cursor-pointer"
                 }
-                handleClick={()=>requestAccess("Editor")}
+                handleClick={() => requestAccess("Editor")}
               />
               <CustomButton
                 title={"Request Admin Access"}
                 textStyle={"text-xl text-black"}
                 containerStyle={
-                  "bg-purple-400 px-4 py-2 rounded-md cursor-pointer"
+                  "bg-purple-400 px-4 py-5 rounded-md cursor-pointer"
                 }
-                handleClick={()=>requestAccess("Admin")}
+                handleClick={() => requestAccess("Admin")}
               />
             </div>
           ) : user.role === "Editor" ? (
@@ -108,9 +122,9 @@ const Profile = () => {
                 title={"Request Admin Access"}
                 textStyle={"text-xl text-black"}
                 containerStyle={
-                  "bg-purple-400 px-4 py-2 rounded-md cursor-pointer"
+                  "bg-purple-400 px-4 py-5 rounded-md cursor-pointer"
                 }
-                handleClick={()=>requestAccess("Admin")}
+                handleClick={() => requestAccess("Admin")}
               />
             </div>
           ) : null}
@@ -125,30 +139,30 @@ const DisplayExpTime = ({ timeDiff }) => {
 
   if (seconds <= 0) {
     return (
-      <div className="px-4 py-4 bg-purple-300 border-2 border-purple-500 rounded-lg">
-        <p className="text-xl font-normal text-black">Rotating Token</p>
+      <div className="px-4 py-4 bg-purple-300 border-2 border-purple-500 rounded-lg w-56">
+        <p className="text-xl font-normal text-black text-center">Rotating Token</p>
       </div>
     );
   } else if (seconds < 60) {
     return (
       <div className="px-4 py-4 bg-red-200 border-2 border-red-500 rounded-lg">
-        <p className="text-xl font-normal text-black">
+        <p className="text-xl font-normal text-black w-56 text-center">
           Token Valid for <span className="font-semibold">{seconds}</span> s
         </p>
       </div>
     );
   } else if (seconds < 150) {
     return (
-      <div className="px-4 py-4 bg-yellow-200 border-2 border-yellow-500 rounded-lg">
-        <p className="text-xl font-normal text-black">
+      <div className="px-4 py-4 bg-yellow-300 border-2 border-yellow-500 rounded-lg w-56">
+        <p className="text-xl font-normal text-black text-center">
           Token Valid for <span className="font-semibold">{seconds}</span> s
         </p>
       </div>
     );
   } else {
     return (
-      <div className="px-4 py-2 bg-green-300 border-2 border-green-400 rounded-lg">
-        <p className="text-xl font-normal text-black">
+      <div className="px-4 py-4 bg-green-300 border-2 border-green-400 rounded-lg w-56">
+        <p className="text-xl font-normal text-black text-center">
           Token Valid for <span className="font-semibold">{seconds}</span> s
         </p>
       </div>
