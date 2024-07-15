@@ -18,7 +18,9 @@ export const logoutHandler = async (req, res) => {
 
         // If user not found, clear cookie and return success
         if (!user) {
-            res.clearCookie('jwt', { httpOnly: true, secure: false, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+            // res.clearCookie('jwt', { httpOnly: true, secure: false, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+
+            res.clearCookie('jwt', { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
             return res.sendStatus(statusCodes.noContent);
         }
 
@@ -26,7 +28,9 @@ export const logoutHandler = async (req, res) => {
         await Users.updateOne({ username: user.username }, { refreshToken: "" });
 
         // Clear cookie from client side
-        res.clearCookie('jwt', { httpOnly: true, secure: false, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
+        // res.clearCookie('jwt', { httpOnly: true,maxAge: 24 * 60 * 60 * 1000 });
+
+        res.clearCookie('jwt', { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
 
         // Return success status
         return res.sendStatus(statusCodes.noContent);

@@ -4,11 +4,14 @@ import { userAtom } from "../state/userAtom";
 import Card from "../components/Card";
 import profile from "../assets/images/profile.jpg";
 import CustomButton from "../components/CustomButton";
+import AlertBox from "../components/AlertBox";
 import { jwtDecode } from "jwt-decode";
+import { upgradeAccess } from "../utils/auth";
 
 const Profile = () => {
   const user = useRecoilValue(userAtom);
   const [tokenExpTime, setTokenExpTime] = useState(0);
+  const [alert, setAlert] = useState({ show: false, success: false, msg: "" });
 
   useEffect(() => {
     const calculateTimeDifference = () => {
@@ -26,8 +29,29 @@ const Profile = () => {
     };
   }, [user.accessToken]);
 
+  const requestAccess = async (requestingAccess) => {
+    const response = await upgradeAccess(
+      user.accessToken,
+      user.id,
+      requestingAccess
+    );
+
+    if (response.data) {
+        setAlert({show:true,success:true,msg:"Request has been sent to Admin"})
+    } else {
+        setAlert({show:true,success:false,msg:"Failed to send request"})
+    }
+  };
+
   return (
     <div className="w-full h-[100vh] flex justify-center items-center">
+      {alert.show && (
+        <AlertBox
+          success={alert.success}
+          msg={alert.msg}
+          onClose={() => setAlert({ ...alert, show: false })}
+        />
+      )}
       <Card style={"px-32 py-16"}>
         <div className="flex flex-col justify-center items-center gap-8">
           <img
@@ -67,6 +91,7 @@ const Profile = () => {
                 containerStyle={
                   "bg-purple-400 px-4 py-2 rounded-md cursor-pointer"
                 }
+                handleClick={()=>requestAccess("Editor")}
               />
               <CustomButton
                 title={"Request Admin Access"}
@@ -74,6 +99,7 @@ const Profile = () => {
                 containerStyle={
                   "bg-purple-400 px-4 py-2 rounded-md cursor-pointer"
                 }
+                handleClick={()=>requestAccess("Admin")}
               />
             </div>
           ) : user.role === "Editor" ? (
@@ -84,6 +110,7 @@ const Profile = () => {
                 containerStyle={
                   "bg-purple-400 px-4 py-2 rounded-md cursor-pointer"
                 }
+                handleClick={()=>requestAccess("Admin")}
               />
             </div>
           ) : null}

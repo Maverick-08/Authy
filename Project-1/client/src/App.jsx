@@ -1,15 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { RecoilRoot } from "recoil";
+
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Stats from "./pages/Stats";
-import Access from "./pages/Dashboard";
-import { RecoilRoot } from "recoil";
+import Dashboard from "./pages/Dashboard";
+import PromptLogin from "./components/PromptLogin";
+import Profile from "./pages/Profile";
 
 import AuthLayout from "./layouts/AuthLayout";
 import MainLayout from "./layouts/MainLayout";
-import PromptLogin from "./components/PromptLogin";
-import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -24,8 +25,8 @@ function App() {
               <Route element={<MainLayout />}>
                 <Route path="/" element={<Home />} />
                 <Route path="/stats" element={<Stats />} />
-                <Route path="/access" element={<Access />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/dashboard" element={<Dashboard />} />
               </Route>
             </Route>
             

@@ -41,6 +41,8 @@ export const useAuth = () => {
             }
 
             setUser({isAuthenticated:false})
+            
+            localStorage.clear();
 
             return { status: true }
         }
