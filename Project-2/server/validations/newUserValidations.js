@@ -2,8 +2,9 @@ import zod from 'zod';
 
 const usernameSchema = zod.string()
     .min(3, { message: "Username must be at least 3 characters long" })
-    .max(10, { message: "Username must be at most 10 characters long" })
-    .regex(/^[a-zA-Z0-9]+$/, { message: "Username must contain only letters and numbers" });
+    .max(15, { message: "Username must be at most 15 characters long" })
+    .regex(/[a-zA-Z]/, { message: "Username must contain atleast one letter" })
+    .regex(/^[a-zA-Z0-9_]+$/, { message: "Username must contain only letters, numbers and underscore." });
 
 const fullNameSchema = zod.string()
     .regex(/^[a-zA-Z\s]+$/, { message: "Name should only contain letters" })
