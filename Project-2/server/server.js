@@ -7,6 +7,7 @@ import corsOptions from './config/corsOptions.js';
 import Register from './routes/register.js';
 import Auth from './routes/auth.js';
 import Refresh from './routes/refresh.js';
+import VerifyToken from './middlewares/verifyToken.js';
 
 const app = express();
 
@@ -23,5 +24,7 @@ app.use("/auth", Auth);
 
 app.use("/refresh", Refresh);
 
+// Protected routes
+app.use(VerifyToken)
 
 app.listen(3000,()=>{console.log("Server is running at port 3000");})
