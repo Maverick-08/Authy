@@ -6,6 +6,7 @@ import Client from './config/dbConn.js';
 import corsOptions from './config/corsOptions.js';
 import Register from './routes/register.js';
 import Auth from './routes/auth.js';
+import Refresh from './routes/refresh.js';
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.use(Credentials);
 app.use("/register", Register);
 
 app.use("/auth", Auth);
+
+app.use("/refresh", Refresh);
 
 
 app.listen(3000,()=>{console.log("Server is running at port 3000");})
