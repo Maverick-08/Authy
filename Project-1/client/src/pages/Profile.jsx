@@ -117,7 +117,7 @@ const Profile = () => {
               />
             </div>
           ) : user.role === "Editor" ? (
-            <div>
+            <div className="mt-8 text-center">
               <CustomButton
                 title={"Request Admin Access"}
                 textStyle={"text-xl text-black"}

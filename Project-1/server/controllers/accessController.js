@@ -58,7 +58,7 @@ export const accessLevelHandler = async (req, res) => {
 export const grantAccessHandler = async (req, res) => {
     try {
         const payload = req.body; // {userId: "",requestStatus: true/false,grantRole: ""}
-        console.log(payload);
+        
         const user = Users.findOne({ id: payload.userId });
 
         if (!user) {
@@ -101,5 +101,27 @@ export const userAccessList = async (req, res) => {
     catch (err) {
         console.log("@userAccessList : \n" + err);
         return res.status(statusCodes.internalServerError)
+    }
+}
+
+export const userAccessRole = async (req,res) => {
+    try{
+        const {userId} = req.params;
+
+        if(!userId){
+            return res.status(statusCodes.badRequest).json({msg: "User id is missing"})
+        }
+
+        const userInfo = await Users.findOne({id: userId});
+
+        if(!userInfo){
+            return res.status(statusCodes.badRequest).json({msg: "User does not exist"})
+        }
+
+        return res.json({role: userInfo.role});
+    }
+    catch(err){
+        console.log("@userAccessRole : \n"+err);
+        return res.status(statusCodes.internalServerError);
     }
 }

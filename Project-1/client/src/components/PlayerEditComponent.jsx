@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CustomButton from "./CustomButton";
-import {
-  atomFamily,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   highlightPlayerAtom,
   playerAtomFamily,
@@ -17,6 +12,7 @@ import shortId from "short-unique-id";
 import { addNewPlayer, updatePlayerDetails } from "../utils/data";
 import { userAtom } from "../state/userAtom";
 import PlayerDetails from "./PlayerDetails";
+import axios from "axios";
 
 const uid = new shortId({ length: 10 });
 
@@ -30,7 +26,7 @@ const PlayerEditComponent = () => {
     setSelectedAtom = useSetRecoilState(playerAtomFamily(updatePlayerData.id));
   }
 
-  const user = useRecoilValue(userAtom);
+  const [user, setUser] = useRecoilState(userAtom);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [position, setPosition] = useState("");
@@ -39,6 +35,29 @@ const PlayerEditComponent = () => {
   const [apg, setapg] = useState("");
   const [rpg, setrpg] = useState("");
   const [alert, setAlert] = useState({ show: false, success: false, msg: "" });
+
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await axios.get(
+        `http://localhost:3000/access/role/${user.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.accessToken}`,
+            "Content-Type": `application/json`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      const userInfo = response.data;
+
+      if (user.role !== userInfo.role) {
+        setUser({ ...user, role: userInfo.role });
+      }
+    };
+
+    fetch();
+  }, []);
 
   useEffect(() => {
     if (updatePlayerData.id) {
@@ -251,11 +270,9 @@ const PlayerEditComponent = () => {
             <CustomButton
               title={"Add Player"}
               textStyle={"text-white "}
-              containerStyle={
-                `bg-[#6A43C7] px-4 py-2 rounded-md ${
-                  user.role === "User" ? "cursor-not-allowed" : "cursor-pointer"
-                }`
-              }
+              containerStyle={`bg-[#6A43C7] px-4 py-2 rounded-md ${
+                user.role === "User" ? "cursor-not-allowed" : "cursor-pointer"
+              }`}
               handleClick={addPlayer}
             />
           )}
