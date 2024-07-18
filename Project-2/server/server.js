@@ -11,6 +11,7 @@ import VerifyToken from './middlewares/verifyToken.js';
 import Logout from './routes/logout.js';
 import Data from './routes/api/data.js'
 import Notifications from './routes/api/notifications.js';
+import Access from './routes/access.js';
 
 const app = express();
 
@@ -35,6 +36,8 @@ app.use("/logout", Logout);
 app.use("/data", Data);
 
 app.use("/notifications", Notifications);
+
+app.use("/access", Access);
 
 
 app.listen(3000,()=>{console.log("Server is running at port 3000");})
