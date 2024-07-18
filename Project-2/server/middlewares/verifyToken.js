@@ -20,7 +20,7 @@ const verifyAccessToken = (req, res, next) => {
         process.env.ACCESS_TOKEN,
         (err, decoded) => {
             if(err){
-                return res.sendStatus(responseCode.forbidden)
+                return res.status(responseCode.forbidden).json({msg: "Token tampered or expired"})
             }
 
             req.username = decoded["userDetails"].username

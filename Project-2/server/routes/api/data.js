@@ -1,0 +1,11 @@
+import { Router } from "express";
+import { addNewPlayer, getPlayersData } from "../../controllers/dataController.js";
+
+const router = Router();
+
+router.get("/", getPlayersData) // For accessing data
+router.post("/", addNewPlayer) // For adding new data
+// router.put("/") // For updating new data
+// router.delete("/") // For deleting data
+
+export default router;

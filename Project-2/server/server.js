@@ -9,6 +9,7 @@ import Auth from './routes/auth.js';
 import Refresh from './routes/refresh.js';
 import VerifyToken from './middlewares/verifyToken.js';
 import Logout from './routes/logout.js';
+import Data from './routes/api/data.js'
 
 const app = express();
 
@@ -29,5 +30,8 @@ app.use("/refresh", Refresh);
 app.use(VerifyToken)
 
 app.use("/logout", Logout);
+
+app.use("/data", Data);
+
 
 app.listen(3000,()=>{console.log("Server is running at port 3000");})
