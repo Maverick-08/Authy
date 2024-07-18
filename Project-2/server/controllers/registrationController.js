@@ -2,6 +2,7 @@ import responseCode from "../config/responseCode.js";
 import bcrypt from 'bcrypt';
 import Client from "../config/dbConn.js";
 import { validateFullName, validateUsername, validatePassword } from "../validations/newUserValidations.js"
+import { Notifications } from "./notificationController.js";
 
 export const registrationHandler = async (req, res) => {
     const payload = req.body;
@@ -49,6 +50,9 @@ export const registrationHandler = async (req, res) => {
 
             await Client.query('INSERT INTO users(username, fullName, password) VALUES($1, $2, $3)', [payload.username, payload.fullName, hashedPassword])
         }
+
+        const newUser = new Notifications(payload.username);
+        await newUser.push("Welcome to Authy !")
 
         return res.sendStatus(responseCode.resourceCreated);
     }

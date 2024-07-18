@@ -10,6 +10,7 @@ import Refresh from './routes/refresh.js';
 import VerifyToken from './middlewares/verifyToken.js';
 import Logout from './routes/logout.js';
 import Data from './routes/api/data.js'
+import Notifications from './routes/api/notifications.js';
 
 const app = express();
 
@@ -32,6 +33,8 @@ app.use(VerifyToken)
 app.use("/logout", Logout);
 
 app.use("/data", Data);
+
+app.use("/notifications", Notifications);
 
 
 app.listen(3000,()=>{console.log("Server is running at port 3000");})
