@@ -16,9 +16,9 @@ export const fetchNotifications = async (req, res) => {
         // If user exists
         const fetchUserNotifications = await Client.query('SELECT notifications FROM notifications WHERE username = $1', [username]);
 
-        const notifications = fetchUserNotifications.rows;
+        const {notifications} = fetchUserNotifications.rows[0];
 
-        res.json({ notifications })
+        res.json({notifications})
     }
     catch (err) {
         console.log("@fetchNotification : \n" + err);
