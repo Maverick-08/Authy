@@ -8,39 +8,60 @@ import Stats from './pages/Stats';
 import Profile from './pages/Profile';
 import SignOut from './pages/SignOut';
 import Dashboard from './pages/Dashboard';
+import MainLayout from './layout/MainLayout';
 
 const router = createBrowserRouter([
-  {
-    path: "/signin",
-    element: <SignIn />
-  },
-  {
-    path: "/signup",
-    element: <SignUp />
-  },
   {
    path:"/",
    element: <AuthLayout />,
    children: [
     {
       index: true,
-      element: <Home />,
+      element: (
+        <MainLayout>
+          <Home />
+        </MainLayout>
+      ),
     },
     {
       path: 'stats',
-      element: <Stats />,
+      element: (
+        <MainLayout>
+          <Stats />
+        </MainLayout>
+      )
     },
     {
       path: 'profile',
-      element: <Profile />,
+      element: (
+        <MainLayout>
+          <Profile />
+        </MainLayout>
+      )
     },
     {
       path: "dashboard",
-      element: <Dashboard />
+      element: (
+        <MainLayout>
+          <Dashboard />
+        </MainLayout>
+      )
+    },
+    {
+      path: 'signin',
+      element: <SignIn />
+    },
+    {
+      path: 'signup',
+      element: <SignUp />
     },
     {
       path: 'signout',
-      element: <SignOut />
+      element: (
+        <MainLayout>
+          <SignOut />
+        </MainLayout>
+      )
     }
    ] 
   }
