@@ -5,7 +5,7 @@ export const themeAtom = atom({
     default: "light",
     effects: [
         ({setSelf, onSet}) => {
-            const {theme} = JSON.parse(localStorage.getItem("Preferences"))
+            const {theme} = JSON.parse(localStorage.getItem("Preferences")) ?? {undefined}
             
             if(theme){
                 setSelf(theme)
