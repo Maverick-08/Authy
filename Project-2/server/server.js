@@ -12,6 +12,7 @@ import Logout from './routes/logout.js';
 import Data from './routes/api/data.js'
 import Notifications from './routes/api/notifications.js';
 import Access from './routes/access.js';
+import Active from './routes/api/active.js';
 
 const app = express();
 
@@ -27,6 +28,8 @@ app.use("/register", Register);
 app.use("/auth", Auth);
 
 app.use("/refresh", Refresh);
+
+app.use("/active", Active)
 
 // Protected routes
 app.use(VerifyToken)

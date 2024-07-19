@@ -1,29 +1,41 @@
 import { useRecoilState } from "recoil"
-import { accessTokenAtom, userAtom } from "../state/userState"
-import { handleLogin } from "../utils/auth"
-import {jwtDecode} from 'jwt-decode';
+import { accessTokenAtom, userAtom } from "../state/userState.js"
+import { handleLogin, loggedIn, newAccessToken } from "../utils/auth.js"
+import { jwtDecode } from 'jwt-decode';
 
 
 export const useAuth = () => {
     const [user, setUser] = useRecoilState(userAtom)
     const [accessToken, setAccessToken] = useRecoilState(accessTokenAtom)
-    
+
     const Login = async (username, password) => {
-        try{
+        try {
             const response = await handleLogin(username, password);
 
-            setUser({username:response.username, fullName: response.fullName,role: response.role, isAuthenticated: true});
+            setUser({ username: response.username, fullName: response.fullName, role: response.role, isAuthenticated: true });
 
             setAccessToken(response.accessToken);
 
-            return {status: true};
+            return { status: true };
         }
-        catch(err){
-            console.log("@Login : \n"+err);
+        catch (err) {
+            console.log("@Login : \n" + err);
 
             const errMsg = err.response.data.msg;
 
-            return {status: false,msg:errMsg}
+            return { status: false, msg: errMsg }
+        }
+    }
+
+    const isLoggedIn = async () => {
+        try{
+            const response = await loggedIn(user.username);
+
+            return response.isActive;
+        }
+        catch(err){
+            console.log("@isLoggedIn : \n"+err);
+            return false;
         }
     }
 
@@ -33,14 +45,18 @@ export const useAuth = () => {
     }
 
     const rotateToken = async () => {
-        try{
-            // const response = await axios.get()
+        try {
+            const response = await newAccessToken();
+
+            return { status: true ,newAccessToken:response.newAccessToken};
         }
-        catch(err){
-            console.log("@rotateToken : \n"+err);
-            return {status: false}
+        catch (err) {
+            console.log("@rotateToken : \n" + err);
+
+            return { status: false }
         }
     }
 
-    return {Login};
+
+    return { Login, isTokenValid, rotateToken, isLoggedIn};
 }

@@ -1,13 +1,55 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { RecoilRoot } from "recoil";
+import { RecoilRoot, useRecoilState } from "recoil";
+import { userAtom, accessTokenAtom } from "../state/userState";
+import { useAuth } from "../Hooks/useAuth";
 
 const AuthLayout = () => {
   return (
     <RecoilRoot>
+      <TokenVerifier />
       <Outlet />
     </RecoilRoot>
   );
+};
+
+const TokenVerifier = () => {
+  const [user, setUser] = useRecoilState(userAtom);
+  const [accessToken, setAccessToken] = useRecoilState(accessTokenAtom);
+  const { isTokenValid, rotateToken, isLoggedIn } = useAuth();
+
+  useEffect(() => {
+
+    const authCheck = async () => {
+      const isUserLoggedIn = await isLoggedIn();
+
+      if(isUserLoggedIn){
+          if(!isTokenValid()){
+            const response = await rotateToken();
+
+            if(response.status){
+              console.log("Token Rotated")
+              setAccessToken(response.newAccessToken)
+            }
+            else{
+              setAccessToken("");
+              setUser({ username: "", role: "", fullName: "", isAuthenticated: false });
+              localStorage.clear();
+            }
+          }
+      }
+      else{
+        setUser({})
+        localStorage.clear();
+      }
+    }
+
+    const intervalId = setInterval(authCheck, 1000 * 10);
+
+    return () => clearInterval(intervalId);
+  }, [accessToken]);
+
+  return <></>;
 };
 
 export default AuthLayout;

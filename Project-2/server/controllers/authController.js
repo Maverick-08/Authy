@@ -82,7 +82,7 @@ export const authHandler = async (req, res) => {
                         }
                     },
                     process.env.REFRESH_TOKEN,
-                    { expiresIn: '1d' }
+                    { expiresIn: '30d' }
                 )
 
                 const accessToken = jwt.sign(
