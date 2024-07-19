@@ -36,7 +36,7 @@ export const accessTokenAtom = atom({
     default: "",
     effects: [
         ({ setSelf, onSet }) => {
-            const { accessToken } = JSON.parse(localStorage.getItem("token"))
+            const { accessToken } = JSON.parse(localStorage.getItem("Token")) ?? {accessToken: undefined}
 
             if (accessToken) {
                 setSelf(accessToken)
@@ -44,7 +44,7 @@ export const accessTokenAtom = atom({
 
             onSet((newToken) => {
                 setSelf(newToken);
-                localStorage.setItem("accessToken", JSON.stringify({ accessToken: newToken }))
+                localStorage.setItem("Token", JSON.stringify({ accessToken: newToken }))
             })
 
         }

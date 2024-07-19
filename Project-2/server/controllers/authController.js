@@ -45,7 +45,8 @@ export const authHandler = async (req, res) => {
                 // Step 1
                 const refreshToken = userInfo.refreshtoken;
 
-                res.cookie('jwt',refreshToken,{ httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+                res.cookie('jwt',refreshToken,{ httpOnly: true,maxAge: 24 * 60 * 60 * 1000 })
+
 
                 // Step 2
                 const activeSessions = userInfo.activesessions;
@@ -62,7 +63,7 @@ export const authHandler = async (req, res) => {
                     process.env.ACCESS_TOKEN,
                     { expiresIn: '3m' }
                 )
-
+                
                 return res.json({
                     username:userInfo.username,
                     fullName: userInfo.fullname,
@@ -97,6 +98,8 @@ export const authHandler = async (req, res) => {
 
                 // Step 2
                 await Client.query('UPDATE users SET activesessions = $1, isloggedin = $2, refreshtoken = $3',[1,true,refreshToken])
+
+                res.cookie('jwt',refreshToken,{ httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
 
                 // Step 3
                 return res.json({

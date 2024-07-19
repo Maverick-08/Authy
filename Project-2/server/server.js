@@ -16,10 +16,10 @@ import Access from './routes/access.js';
 const app = express();
 
 // Middlewares
-app.use(cors(corsOptions));
-app.use(cookieParser());
-app.use(express.json());
 app.use(Credentials);
+app.use(cookieParser());
+app.use(cors(corsOptions));
+app.use(express.json());
 
 // Services
 app.use("/register", Register);

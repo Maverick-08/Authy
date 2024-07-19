@@ -1,9 +1,10 @@
 import React from 'react'
 
 const Stats = () => {
+  console.log("stats")
   return (
     <div>
-      Stats
+     
     </div>
   )
 }

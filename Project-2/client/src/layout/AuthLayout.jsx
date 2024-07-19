@@ -1,14 +1,13 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
-import { Outlet } from 'react-router-dom'
+import React from "react";
+import { Outlet } from "react-router-dom";
+import { RecoilRoot } from "recoil";
 
 const AuthLayout = () => {
   return (
-    <div className='relative'>
-      <Navbar />
+    <RecoilRoot>
       <Outlet />
-    </div>
-  )
-}
+    </RecoilRoot>
+  );
+};
 
-export default AuthLayout
+export default AuthLayout;
