@@ -25,9 +25,13 @@ const TokenVerifier = () => {
       
       if(!user.isAuthenticated) return;
 
-      const isUserLoggedIn = await isLoggedIn();
+      const response = await isLoggedIn();
 
-      if(isUserLoggedIn){
+      if(response.isActive){
+          if(user.activeSessions !== response.activeSessions){
+            setUser({...user,activeSessions:response.activeSessions});
+          }
+          
           if(!isTokenValid()){
             const response = await rotateToken();
 
