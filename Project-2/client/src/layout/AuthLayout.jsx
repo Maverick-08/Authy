@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { RecoilRoot, useRecoilState } from "recoil";
 import { userAtom, accessTokenAtom } from "../state/userState";
 import { useAuth } from "../Hooks/useAuth";
@@ -17,10 +17,14 @@ const TokenVerifier = () => {
   const [user, setUser] = useRecoilState(userAtom);
   const [accessToken, setAccessToken] = useRecoilState(accessTokenAtom);
   const { isTokenValid, rotateToken, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
 
     const authCheck = async () => {
+      
+      if(!user.isAuthenticated) return;
+      
       const isUserLoggedIn = await isLoggedIn();
 
       if(isUserLoggedIn){
@@ -35,12 +39,14 @@ const TokenVerifier = () => {
               setAccessToken("");
               setUser({ username: "", role: "", fullName: "", isAuthenticated: false });
               localStorage.clear();
+              navigate("/")
             }
           }
       }
       else{
         setUser({})
         localStorage.clear();
+        navigate("/");
       }
     }
 

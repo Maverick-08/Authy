@@ -32,7 +32,7 @@ const User = ({ user }) => {
       <Notifications user={user} display={showNotification} />
       <p
         className="text-4xl font-normal cursor-pointer"
-        title={`Access Level : ${user.role}`}
+        title={`${user.role} level access`}
       >
         {user.username ? user.username : "User"}
       </p>
