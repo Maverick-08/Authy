@@ -20,6 +20,9 @@ export const userAtom = atom({
                     username: userInfo.username,
                     fullName: userInfo.fullName,
                     role: userInfo.role,
+                    createdAt: userInfo.createdAt,
+                    isLoggedIn: userInfo.isLoggedIn,
+                    activeSessions: userInfo.activeSessions,
                     isAuthenticated: userInfo.isAuthenticated
                 })
             }

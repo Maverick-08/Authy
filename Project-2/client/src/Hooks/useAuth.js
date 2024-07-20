@@ -2,6 +2,7 @@ import { useRecoilState } from "recoil"
 import { accessTokenAtom, userAtom } from "../state/userState.js"
 import { handleLogin, loggedIn, newAccessToken } from "../utils/auth.js"
 import { jwtDecode } from 'jwt-decode';
+import moment from 'moment';
 
 
 export const useAuth = () => {
@@ -11,9 +12,10 @@ export const useAuth = () => {
     const Login = async (username, password) => {
         try {
             const response = await handleLogin(username, password);
+            const localTimeStamp = moment.utc(response.createdAt).add(5,'hours').add(30,'minutes').local().format("DD/MM/YYYY h:mm:ss")
 
             setUser({
-                username: response.username, fullName: response.fullName, role: response.role, createdAt: response.createdAt,
+                username: response.username, fullName: response.fullName, role: response.role, createdAt: localTimeStamp,
                 isLoggedIn: response.isLoggedIn, activeSessions: response.activeSessions, isAuthenticated: true
             });
 

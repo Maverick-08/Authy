@@ -31,7 +31,6 @@ export const refreshTokenHandler = async (req,res) => {
         // 2. Issue new access token
 
         const userInfo = result.rows[0];
-        console.log(result.rows);
 
         jwt.verify(
             refreshToken,

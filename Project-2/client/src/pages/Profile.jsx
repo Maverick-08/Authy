@@ -6,8 +6,8 @@ import ProfileImage from '../assets/images/profile.jpg'
 
 const Profile = () => {
   const user = useRecoilValue(userAtom)
-  console.log(user)
-  
+ console.log(user)
+ 
   return (
     <div className='w-full h-[100vh] flex justify-center items-center'>
       <Card>
@@ -18,7 +18,7 @@ const Profile = () => {
         <div>
           <p>Username : <span>{user.username}</span></p>
           <p>Role : <span>{user.role}</span></p>
-          <p>Create At : <span>{user.createdAt}</span></p>
+          <p>Created At : <span>{user.createdAt}</span></p>
           <p>Logged In : <span>{user.createdAt ? "Online" : "Offline"}</span></p>
           <p>Active Sessions : <span>{user.activeSessions}</span></p>
         </div>
