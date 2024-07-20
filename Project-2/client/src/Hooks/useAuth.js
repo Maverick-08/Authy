@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil"
 import { accessTokenAtom, userAtom } from "../state/userState.js"
-import { handleLogin, handleLogout, loggedIn, newAccessToken } from "../utils/auth.js"
+import { handleLogin, handleLogout, loggedIn, newAccessToken, requestAccess } from "../utils/auth.js"
 import { jwtDecode } from 'jwt-decode';
 import moment from 'moment';
 
@@ -71,7 +71,7 @@ export const useAuth = () => {
     const rotateToken = async () => {
         try {
             const response = await newAccessToken();
-
+            
             return { status: true, newAccessToken: response.newAccessToken };
         }
         catch (err) {
@@ -81,6 +81,17 @@ export const useAuth = () => {
         }
     }
 
+    const Request = async (payload) => {
+        try{
+            await requestAccess(accessToken, payload);
 
-    return { Login, Logout, isTokenValid, rotateToken, isLoggedIn };
+            return {status: true};
+        }
+        catch(err){
+            console.log("@Request : \n"+err);
+            return {status : false}
+        }
+    }
+
+    return { Login, Logout, Request, isTokenValid, rotateToken, isLoggedIn };
 }

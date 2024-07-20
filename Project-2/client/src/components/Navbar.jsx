@@ -42,120 +42,75 @@ const User = ({ user }) => {
 
 const Notifications = ({ user, display }) => {
   const [notifications, setNotifications] = useState([]);
-  const accessToken = useRecoilValue(accessTokenAtom)
+  const accessToken = useRecoilValue(accessTokenAtom);
 
   useEffect(() => {
     const fetch = async () => {
-      if (user.username !== "") {
+      if (user.username) {
         const response = await axios.get(
           `http://localhost:3000/notifications/${user.username}`,{
             headers:{
               'Authorization': `Bearer ${accessToken}`,
-              'Content-Type': `application/json`,
+              'Content-Type': 'application/json',
             }
           }
         );
         const userNotifications = response.data.notifications ?? [];
-        setNotifications([...userNotifications]);
+        setNotifications(userNotifications);
       }
     };
 
     fetch();
-  }, []);
+    console.log(notifications)
+    
+  }, [display]);
 
-  if (notifications.length === 0) {
-    return (
-      <div
-        className={`fixed mt-48 bg-white border-2 border-purple-400 px-4 py-2 ${
-          display ? "inline" : "hidden"
-        } z-20 rounded-md`}
-      >
+  return (
+    <div
+      className={`fixed mt-48 bg-white border-2 border-purple-400 px-4 py-2 ${
+        display ? "inline" : "hidden"
+      } z-20 rounded-md`}
+    >
+      {notifications.length === 0 ? (
         <p className="text-2xl text-gray-400 border-b-2 mb-2">
           No New Notifications
         </p>
-      </div>
-    );
-  } else {
-    return (
-      <div
-        className={`fixed mt-48 bg-white border-2 border-purple-400 px-4 py-2 ${
-          display ? "inline" : "hidden"
-        } z-20 rounded-md`}
-      >
-        {notifications.map((notifications, index) => (
-          <div className=" border-b-2 mb-2 border-gray-200 flex flex-col items-end" key={index}>
-            <p className="text-xl text-gray-600">{notifications.info}</p>
-            <span className="text-xs text-gray-500">{notifications.createdAt}</span>
+      ) : (
+        notifications.map((notification, index) => (
+          <div className="border-b-2 mb-2 border-gray-200 flex flex-col items-end" key={index}>
+            <p className="text-xl text-gray-600">{notification.info}</p>
+            <span className="text-xs text-gray-500">{notification.createdAt}</span>
           </div>
-        ))}
-      </div>
-    );
-  }
+        ))
+      )}
+    </div>
+  );
 };
 
 const Links = ({ user }) => {
-  const navigate = useNavigate();
   const location = useLocation();
-  // console.log(location.pathname);
-  // {pathname: '/', search: '', hash: '', state: null, key: 'default'}
 
   return (
     <div>
       <ul className="flex justify-around items-center gap-8">
-        <li className="text-xl px-4 py-2 rounded-md text-gray-500 cursor-pointer">
-          {location.pathname == "/" ? (
-            <Link to="About" smooth={true} duration={500}>
-              About
-            </Link>
-          ) : (
-            <NavLink to={"/"}>About</NavLink>
-          )}
-        </li>
-
-        <li className="text-xl px-4 py-2 rounded-md text-gray-500 cursor-pointer">
-          {location.pathname == "/" ? (
-            <Link to="Topics" smooth={true} duration={500}>
-              Topics
-            </Link>
-          ) : (
-            <NavLink to={"/"}>Topics</NavLink>
-          )}
-        </li>
-
-        <li className="text-xl px-4 py-2 rounded-md text-gray-500  cursor-pointer">
-          {location.pathname === "/" ? (
-            <Link to="Developer" smooth={true} duration={500}>
-              Developer
-            </Link>
-          ) : (
-            <NavLink to={"/"}>Developer</NavLink>
-          )}
-        </li>
+        <NavItem to="/" text="About" location={location.pathname} />
+        <NavItem to="/" text="Topics" location={location.pathname} />
+        <NavItem to="/" text="Developer" location={location.pathname} />
 
         {user.isAuthenticated ? (
           <>
             {user.role === "Admin" ? (
-              <>
-                <li className="text-xl px-4 py-2 rounded-md text-gray-500  cursor-pointer">
-                  <NavLink to={"/dashboard"}>Dashboard</NavLink>
-                </li>
-              </>
+              <NavItem to="/dashboard" text="Dashboard" />
             ) : (
               <>
-                <li className="text-xl px-4 py-2 rounded-md text-gray-500  cursor-pointer">
-                  <NavLink to={"/stats"}>Statistics</NavLink>
-                </li>
-
-                <li className="text-xl px-4 py-2 rounded-md text-gray-500  cursor-pointer">
-                  <NavLink to={"/profile"}>Profile</NavLink>
-                </li>
+                <NavItem to="/stats" text="Statistics" />
+                <NavItem to="/profile" text="Profile" />
               </>
             )}
-
-            <li className="text-xl px-4 py-2 rounded-md text-gray-500  cursor-pointer">
+            <li className="text-xl px-4 py-2 rounded-md text-gray-500 cursor-pointer">
               <NavLink
-                to={"/signout"}
-                className={"text-2xl font-medium text-[#6A43C7] cursor-pointer"}
+                to="/signout"
+                className="text-2xl font-medium text-[#6A43C7] cursor-pointer"
               >
                 Logout
               </NavLink>
@@ -170,5 +125,17 @@ const Links = ({ user }) => {
     </div>
   );
 };
+
+const NavItem = ({ to, text, location }) => (
+  <li className="text-xl px-4 py-2 rounded-md text-gray-500 cursor-pointer">
+    {location === "/" ? (
+      <Link to={text} smooth={true} duration={500}>
+        {text}
+      </Link>
+    ) : (
+      <NavLink to={to}>{text}</NavLink>
+    )}
+  </li>
+);
 
 export default Navbar;

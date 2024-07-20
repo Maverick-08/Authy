@@ -33,3 +33,14 @@ export const newAccessToken = async () => {
 
     return response.data;
 }
+
+export const requestAccess = async (accessToken, payload) => {
+    const response = await axios.post("http://localhost:3000/access",payload,{
+        headers:{
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': `application/json`
+        }
+    })
+
+    return ;
+}

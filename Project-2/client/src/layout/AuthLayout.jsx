@@ -37,6 +37,7 @@ const TokenVerifier = () => {
 
             if(response.status){
               console.log("Token Rotated")
+              await new Promise(r => setTimeout(r,2000))
               setAccessToken(response.newAccessToken)
             }
             else{
