@@ -11,7 +11,7 @@ export const activeHandler = async (req, res) => {
             return res.status(responseCode.unauthorised).json({msg: "User does not exist"})
         }
         
-        return res.json({isActive:response.rows[0].isloggedin,activeSessions:response.rows[0].activesessions})
+        return res.json({isActive:response.rows[0].isloggedin,activeSessions:response.rows[0].activesessions, role:response.rows[0].role})
     }
     catch(err){
         console.log("@activeHandler : \n"+err);

@@ -71,10 +71,10 @@ const Display = ({ user, setState }) => {
 
   return (
     <tr>
-      <td className="px-4 py-2 border">{user.username}</td>
+      <td className="px-4 py-2 border text-center">{user.username}</td>
       <td className="px-4 py-2 border">{user.createdAt}</td>
-      <td className="px-4 py-2 border">{user.role}</td>
-      <td className="px-4 py-2 border">{user.requestingAccess}</td>
+      <td className="px-4 py-2 border text-center">{user.role}</td>
+      <td className="px-4 py-2 border text-center">{user.requestingAccess}</td>
       <td className="px-4 py-2 border">
         <div className="flex gap-4">
           <button

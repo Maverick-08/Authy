@@ -31,6 +31,10 @@ const TokenVerifier = () => {
           if(user.activeSessions !== response.activeSessions){
             setUser({...user,activeSessions:response.activeSessions});
           }
+
+          if(user.role !== response.role){
+            setUser({...user,role:response.role})
+          }
           
           if(!isTokenValid()){
             const response = await rotateToken();

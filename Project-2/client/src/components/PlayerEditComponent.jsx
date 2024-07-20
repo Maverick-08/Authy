@@ -60,6 +60,11 @@ const PlayerEditComponent = ({ user }) => {
   };
 
   const DeletePlayer = async () => {
+
+    if(user.role === "User"){
+      setAlert({show:true,success:false,msg:"You do not have Editor access"})
+    }
+
     const response = await deletePlayerData(player.name)
     
     if(response.status){
@@ -85,6 +90,10 @@ const PlayerEditComponent = ({ user }) => {
   }
 
   const UpdatePlayer = async () => {
+
+    if(user.role === "User"){
+      setAlert({show:true,success:false,msg:"You do not have Editor access"})
+    }
     const payload = {name, team, age, position, ppg, apg, rpg};
     const response = await updatePlayerData(payload);
 

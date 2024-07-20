@@ -55,7 +55,7 @@ export const useAuth = () => {
         try {
             const response = await loggedIn(user.username);
 
-            return {isActive:response.isActive,activeSessions:response.activeSessions};
+            return {isActive:response.isActive,activeSessions:response.activeSessions, role:response.role};
         }
         catch (err) {
             console.log("@isLoggedIn : \n" + err);
