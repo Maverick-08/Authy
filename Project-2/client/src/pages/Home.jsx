@@ -1,6 +1,6 @@
 import React from "react";
 import Logo from "../assets/images/Logo.png";
-import DeveloperImage from "../assets/images/Developer.jpg"
+import DeveloperImage from "../assets/images/Developer.jpg";
 
 const Home = () => {
   return (
@@ -66,9 +66,6 @@ const Home = () => {
                 <li className="text-2xl text-gray-400">
                   Persistence Authentication without using local storage
                 </li>
-                <li className="text-2xl text-gray-400">
-                  Implementing Data Structures in Development
-                </li>
                 <li className="text-2xl text-gray-400">React-Router v6</li>
               </ul>
             </div>
@@ -76,23 +73,52 @@ const Home = () => {
               <p className="text-3xl font-regular">Backend</p>
               <ul className="list-decimal px-8 py-4">
                 <li className="text-2xl text-gray-400">Clean code practices</li>
+                <li className="text-2xl text-gray-400">
+                  Implementing Data Structures in Development
+                </li>
                 <li className="text-2xl text-gray-400">Pub-Sub model</li>
                 <li className="text-2xl text-gray-400">Token Rotation</li>
+                <li className="text-2xl text-gray-400">
+                  Managing Multiple Sessions
+                </li>
                 <li className="text-2xl text-gray-400">Dynamic Routes</li>
               </ul>
             </div>
           </div>
         </div>
       </div>
-      <div
-        id="Developer"
-        className="h-[100vh] w-full"
-      >
+      <div id="Developer" className="h-[100vh] w-full">
         <div className="w-full flex flex-col gap-24 justify-center items-center pt-24">
-          <p className="text-4xl text-purple-600 font-medium">Meet the Developer</p>
+          <p className="text-4xl text-purple-600 font-medium">
+            Meet the Developer
+          </p>
           <div className="w-[80vw] flex gap-24 items-center">
-            <img src={DeveloperImage} alt="" className="w-96 h-96 rounded-lg shadow-lg"/>
-            <p className="text-2xl text-gray-500 leading-10">Heyy Everyone ! My name is <span className="text-purple-600 font-medium">Vivek Ojha</span>. I am a 2nd year grad at <span className="text-purple-600 font-medium">NIT Bhopal</span>. I am a software developer with an expertise in <span className="text-purple-600 font-medium">MERN stack, Flask, Tailwind Css, React Native and AWS.</span> I describe myself as a learner who follows the idea of choosing <span className="text-purple-600 font-medium">progress over perfection !</span> This ideology pushes me to <span className="text-purple-600 font-medium">learn new stuff</span> and figure out a way to <span className="text-purple-600 font-medium">implement</span> it in native projects!</p>
+            <img
+              src={DeveloperImage}
+              alt=""
+              className="w-96 h-96 rounded-lg shadow-lg"
+            />
+            <p className="text-2xl text-gray-500 leading-10">
+              Heyy Everyone ! My name is{" "}
+              <span className="text-purple-600 font-medium">Vivek Ojha</span>. I
+              am a 2nd year grad at{" "}
+              <span className="text-purple-600 font-medium">NIT Bhopal</span>. I
+              am a software developer with an expertise in{" "}
+              <span className="text-purple-600 font-medium">
+                MERN stack, Flask, Tailwind Css, React Native and AWS.
+              </span>{" "}
+              I describe myself as a learner who follows the idea of choosing{" "}
+              <span className="text-purple-600 font-medium">
+                progress over perfection !
+              </span>{" "}
+              This ideology pushes me to{" "}
+              <span className="text-purple-600 font-medium">
+                learn new stuff
+              </span>{" "}
+              and figure out a way to{" "}
+              <span className="text-purple-600 font-medium">implement</span> it
+              in native projects!
+            </p>
           </div>
         </div>
       </div>
