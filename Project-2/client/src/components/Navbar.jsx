@@ -84,7 +84,7 @@ const Notifications = ({ user, display }) => {
       >
         {notifications.map((notifications, index) => (
           <div className=" border-b-2 mb-2 border-gray-200 flex flex-col items-end" key={index}>
-            <p className="text-2xl text-gray-400">{notifications.info}</p>
+            <p className="text-xl text-gray-600">{notifications.info}</p>
             <span className="text-xs text-gray-500">{notifications.createdAt}</span>
           </div>
         ))}

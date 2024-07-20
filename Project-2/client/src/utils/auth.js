@@ -8,6 +8,18 @@ export const handleLogin = async (username, password) => {
     return response.data;
 }
 
+export const handleLogout = async (payload, accessToken) => {
+    const response = await axios.post("http://localhost:3000/logout",payload,{
+        headers:{
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': `application/json`
+        },
+        withCredentials: true
+    })
+
+    return;
+}
+
 export const loggedIn = async(username) => {
     const response = await axios.get(`http://localhost:3000/active/${username}`)
 

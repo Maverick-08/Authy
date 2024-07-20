@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil"
 import { accessTokenAtom, userAtom } from "../state/userState.js"
-import { handleLogin, loggedIn, newAccessToken } from "../utils/auth.js"
+import { handleLogin, handleLogout, loggedIn, newAccessToken } from "../utils/auth.js"
 import { jwtDecode } from 'jwt-decode';
 import moment from 'moment';
 
@@ -29,6 +29,25 @@ export const useAuth = () => {
             const errMsg = err.response.data.msg;
 
             return { status: false, msg: errMsg }
+        }
+    }
+
+    const Logout = async (allDevices) => {
+        try{
+            const payload = {"username":user.username,"allDevices":allDevices}
+            if(isTokenValid(accessToken)){
+                await handleLogout(payload, accessToken)
+            }
+            else{
+                const response = await rotateToken()
+                await handleLogout(payload, response.newAccessToken)
+            }
+
+            return {status: true}
+        }
+        catch(err){
+            console.log("@Logout : \n" + err);
+            return {status: false}
         }
     }
 
@@ -63,5 +82,5 @@ export const useAuth = () => {
     }
 
 
-    return { Login, isTokenValid, rotateToken, isLoggedIn };
+    return { Login, Logout, isTokenValid, rotateToken, isLoggedIn };
 }

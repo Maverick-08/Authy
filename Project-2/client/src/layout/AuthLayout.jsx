@@ -24,7 +24,7 @@ const TokenVerifier = () => {
     const authCheck = async () => {
       
       if(!user.isAuthenticated) return;
-      
+
       const isUserLoggedIn = await isLoggedIn();
 
       if(isUserLoggedIn){
@@ -53,7 +53,7 @@ const TokenVerifier = () => {
     const intervalId = setInterval(authCheck, 1000 * 10);
 
     return () => clearInterval(intervalId);
-  }, [accessToken]);
+  }, [user,accessToken]);
 
   return <></>;
 };
