@@ -1,10 +1,15 @@
 import React from 'react'
+import { useRecoilValue } from 'recoil'
+import { userAtom } from '../state/userState'
+import PlayerEditComponent from '../components/PlayerEditComponent'
+import PlayerInfoComponent from '../components/PlayerInfoComponent'
 
 const Stats = () => {
-  console.log("stats")
+  const user = useRecoilValue(userAtom)
   return (
-    <div>
-     
+    <div className='w-full'>
+     <PlayerEditComponent user={user}/>
+     <PlayerInfoComponent user={user}/>
     </div>
   )
 }
