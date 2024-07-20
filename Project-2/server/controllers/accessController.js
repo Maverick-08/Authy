@@ -2,6 +2,37 @@ import Client from "../config/dbConn.js";
 import responseCode from "../config/responseCode.js";
 import { Notifications } from "./notificationController.js";
 
+
+export const accessList = async (req, res) => {
+    try {
+        const result = await Client.query('SELECT username, createdat, role, requestingaccess FROM users WHERE requestingaccess IS NOT NULL');
+        const data = [];
+        let id = 1;
+
+        result.rows.forEach(row => {
+            const { username, createdat, role, requestingaccess } = row;
+            const date = new Date(createdat);
+            const formattedDate = `${date.toISOString().split('T')[0]} ${date.toTimeString().split(' ')[0]}`;
+
+            const obj = {
+                id,
+                username,
+                createdAt: formattedDate,
+                role,
+                requestingAccess: requestingaccess
+            };
+            id = id+1;
+            data.push(obj);
+        });
+
+        return res.json({ data });
+
+    } catch (err) {
+        console.log("@accessList : \n" + err);
+        return res.sendStatus(responseCode.internalServerError); 
+    }
+};
+
 export const requestAccess = async (req, res) => {
     try {
         const { username, requestedRole } = req.body;
