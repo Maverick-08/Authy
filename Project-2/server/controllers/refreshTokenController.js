@@ -31,12 +31,14 @@ export const refreshTokenHandler = async (req,res) => {
         // 2. Issue new access token
 
         const userInfo = result.rows[0];
+        console.log(result.rows);
 
         jwt.verify(
             refreshToken,
             process.env.REFRESH_TOKEN,
             (err, decoded) => {
                 if(err || decoded["userDetails"].username !== userInfo.username){
+                    console.log(decoded);
                     return res.status(responseCode.forbidden).json({msg: "Token is tampered"})
                 }
 

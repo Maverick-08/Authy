@@ -12,7 +12,10 @@ export const useAuth = () => {
         try {
             const response = await handleLogin(username, password);
 
-            setUser({ username: response.username, fullName: response.fullName, role: response.role, isAuthenticated: true });
+            setUser({
+                username: response.username, fullName: response.fullName, role: response.role, createdAt: response.createdAt,
+                isLoggedIn: response.isLoggedIn, activeSessions: response.activeSessions, isAuthenticated: true
+            });
 
             setAccessToken(response.accessToken);
 
@@ -28,13 +31,13 @@ export const useAuth = () => {
     }
 
     const isLoggedIn = async () => {
-        try{
+        try {
             const response = await loggedIn(user.username);
 
             return response.isActive;
         }
-        catch(err){
-            console.log("@isLoggedIn : \n"+err);
+        catch (err) {
+            console.log("@isLoggedIn : \n" + err);
             return false;
         }
     }
@@ -48,7 +51,7 @@ export const useAuth = () => {
         try {
             const response = await newAccessToken();
 
-            return { status: true ,newAccessToken:response.newAccessToken};
+            return { status: true, newAccessToken: response.newAccessToken };
         }
         catch (err) {
             console.log("@rotateToken : \n" + err);
@@ -58,5 +61,5 @@ export const useAuth = () => {
     }
 
 
-    return { Login, isTokenValid, rotateToken, isLoggedIn};
+    return { Login, isTokenValid, rotateToken, isLoggedIn };
 }

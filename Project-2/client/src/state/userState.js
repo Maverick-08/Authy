@@ -6,6 +6,9 @@ export const userAtom = atom({
         username: "",
         fullName: "",
         role: "",
+        createdAt: "",
+        isLoggedIn: "",
+        activeSessions: "",
         isAuthenticated: false
     },
     effects: [
