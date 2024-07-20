@@ -23,7 +23,7 @@ export const playerIdsAtom = atom({
                     updatedPlayersData.push({...player,id});
                 });
 
-                await new Promise(r => setTimeout(r,3000))
+                await new Promise(r => setTimeout(r,2000))
 
                 localStorage.setItem("playersInfo",JSON.stringify(updatedPlayersData));
 
@@ -49,7 +49,7 @@ export const playersAtomFamily = atomFamily({
     })
 })
 
-export const selectedPlayer = atom({
+export const updatePlayerAtom = atom({
     key: "selectedPlayer",
     default: {
         id: "",

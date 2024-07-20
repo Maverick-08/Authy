@@ -108,10 +108,10 @@ export const updatePlayerData = async (req, res) => {
 
 export const deletePlayerData = async (req,res) => {
     try{
-        const payload = req.body;
+        const {player} = req.params;
 
         // Check if the player exists in our db
-        const result = await Client.query('SELECT * FROM players WHERE name = $1',[payload.name])
+        const result = await Client.query('SELECT * FROM players WHERE name = $1',[player])
         
         // If it does not
         if(!result.rows.length === 0){
@@ -119,7 +119,7 @@ export const deletePlayerData = async (req,res) => {
         }
 
         // If it does
-        await Client.query('DELETE FROM players WHERE name = $1',[payload.name]);
+        await Client.query('DELETE FROM players WHERE name = $1',[player]);
 
         return res.json({msg:"Player deleted"})
     }
