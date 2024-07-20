@@ -49,10 +49,36 @@ export const useData = () => {
 
     const updatePlayerData = async (payload) => {
         try{
-            await updateData(accessToken,payload);
 
-            let existingPlayerData = JSON.parse(localStorage.getItem("playersInfo"));
-            let updatedPlayersData
+            if(payload.name === "" || payload.team === "" || payload.position === ""){
+                return {status: false, msg:"Name, Team and Position cannot be empty"}
+            }
+            
+            if(payload.age !== "" && parseInt(payload.age) === NaN){
+                return {status: false, msg:"Age has to be a number"}
+            }
+
+            if(payload.ppg !== "" && parseFloat(payload.ppg) === NaN){
+                return {status: false, msg:"Only real values are allowed for PPG"}
+            }
+
+            if(payload.apg !== "" && parseFloat(payload.apg) === NaN){
+                return {status: false, msg:"Only real values are allowed for APG"}
+            }
+
+            if(payload.rpg !== "" && parseFloat(payload.rpg) === NaN){
+                return {status: false, msg:"Only real values are allowed for RPG"}
+            }
+
+            const updatedPayload = {...payload,
+                age: payload.age === "" ? null : parseInt(payload.age),
+                ppg: payload.ppg === "" ? null : parseFloat(payload.ppg),
+                apg: payload.apg === "" ? null : parseFloat(payload.apg),
+                rpg: payload.rpg === "" ? null : parseFloat(payload.rpg),
+            }
+
+            await updateData(accessToken,updatedPayload);
+
             return {status:true};
         }
         catch(err){

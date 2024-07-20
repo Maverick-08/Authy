@@ -84,6 +84,31 @@ const PlayerEditComponent = ({ user }) => {
     }
   }
 
+  const UpdatePlayer = async () => {
+    const payload = {name, team, age, position, ppg, apg, rpg};
+    const response = await updatePlayerData(payload);
+
+    if(response.status){
+      setAlert({
+        show: true,
+        success: true,
+        msg: "Player updated successfully !",
+      });
+
+      if(playerIds.state === "hasValue"){
+        let updatedIds = playerIds.contents.filter(Id => Id !== player.id);
+        setPlayerIds(updatedIds)
+      }
+    }
+    else{
+      setAlert({
+        show: true,
+        success: false,
+        msg: response.msg,
+      });
+    }
+  }
+
   const CancelUpdate = () => {
     setPlayer({
       id: "",
@@ -206,7 +231,7 @@ const PlayerEditComponent = ({ user }) => {
               >
                 <p className="text-xl text-white">Cancel</p>
               </div>
-              <div className="bg-[#6A43C7] px-4 py-2 rounded-md cursor-pointer ">
+              <div onClick={UpdatePlayer} className="bg-[#6A43C7] px-4 py-2 rounded-md cursor-pointer ">
                 <p className="text-xl text-white">Update</p>
               </div>
               <div onClick={DeletePlayer} className="bg-[#6A43C7] px-4 py-2 rounded-md cursor-pointer ">
