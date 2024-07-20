@@ -59,6 +59,12 @@ export const addNewPlayer = async (req, res) => {
         // If not : new player
         await Client.query('INSERT INTO players(name, team, position, age, ppg, apg, rpg) VALUES($1, $2, $3, $4, $5, $6, $7)', [name, team, position, age, ppg, apg, rpg]);
 
+        const response = await Client.query('SELECT * FROM update');
+
+        const value = response.rows[0]["state"]+1
+
+        await Client.query('UPDATE update SET state = $1',[value])
+
         return res.sendStatus(responseCode.resourceCreated);
     }
     catch (err) {
@@ -98,6 +104,12 @@ export const updatePlayerData = async (req, res) => {
 
         await Client.query('UPDATE players SET name = $1, team = $2, position = $3, age = $4, ppg = $5, apg = $6, rpg = $7 WHERE name = $8', [payload.name, payload.team, payload.position, payload.age, payload.ppg, payload.apg, payload.rpg,payload.name])
 
+        const response = await Client.query('SELECT * FROM update');
+
+        const value = response.rows[0]["state"]+1
+
+        await Client.query('UPDATE update SET state = $1',[value])
+
         return res.sendStatus(responseCode.noContent);
     }
     catch (err) {
@@ -121,10 +133,27 @@ export const deletePlayerData = async (req,res) => {
         // If it does
         await Client.query('DELETE FROM players WHERE name = $1',[player]);
 
+        const response = await Client.query('SELECT * FROM update');
+
+        const value = response.rows[0]["state"]+1
+
+        await Client.query('UPDATE update SET state = $1',[value])
+
         return res.json({msg:"Player deleted"})
     }
     catch(err){
         console.log("@deletePlayerData : \n" + err);
         return res.sendStatus(responseCode.internalServerError)
+    }
+}
+
+export const updateHistory = async (req, res) => {
+    try{
+        const result = await Client.query('SELECT * FROM update')
+        return res.json({version : result.rows[0]["state"]})
+    }
+    catch(err){
+        console.log("@updateHistory : \n"+err);
+        return res.sendStatus(responseCode.internalServerError);
     }
 }

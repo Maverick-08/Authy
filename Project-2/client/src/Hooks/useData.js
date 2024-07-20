@@ -1,6 +1,7 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { addData, deleteData, updateData } from "../utils/data";
 import { accessTokenAtom } from "../state/userState";
+import axios from "axios";
 
 
 export const useData = () => {
@@ -101,5 +102,22 @@ export const useData = () => {
         }
     }
 
-    return {addPlayerData, updatePlayerData, deletePlayerData}
+    const updateVersion = async () => {
+        try{
+            const response = await axios.get("http://localhost:3000/data/history",{
+                headers:{
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': `application/json`
+                }
+            })
+
+            return {status:true,version: response.data.version};
+        }
+        catch(err){
+            console.log("@updateVersion : \n"+err);
+            return {status:false}
+        }
+    }
+
+    return {addPlayerData, updatePlayerData, deletePlayerData, updateVersion}
 }

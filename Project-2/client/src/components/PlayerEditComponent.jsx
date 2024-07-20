@@ -3,14 +3,15 @@ import { useRecoilState, useRecoilStateLoadable, useRecoilValue, useSetRecoilSta
 import Card from "../components/Card";
 import MessageBox from "../components/MessageBox";
 import { alertAtom } from "../state/notification";
-import { playerIdsAtom, updatePlayerAtom } from "../state/playerState";
+import { playerIdsAtom, updateHistoryAtom, updatePlayerAtom } from "../state/playerState";
 import { useData } from "../Hooks/useData";
 
 const PlayerEditComponent = ({ user }) => {
   const player = useRecoilValue(updatePlayerAtom);
   const setPlayer = useSetRecoilState(updatePlayerAtom);
-  const { addPlayerData, updatePlayerData, deletePlayerData } = useData();
-  const [playerIds, setPlayerIds] = useRecoilStateLoadable(playerIdsAtom)
+  const { addPlayerData, updatePlayerData, deletePlayerData, updateVersion} = useData();
+  const [playerIds, setPlayerIds] = useRecoilStateLoadable(playerIdsAtom);
+  const [version, setVersion] = useRecoilState(updateHistoryAtom)
   const [alert, setAlert] = useRecoilState(alertAtom);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
@@ -20,6 +21,26 @@ const PlayerEditComponent = ({ user }) => {
   const [apg, setapg] = useState("");
   const [rpg, setrpg] = useState("");
 
+  useEffect(()=>{
+    const fetch = async () => {
+      const response = await updateVersion();
+
+      if(response.status){
+        if(version !== response.version){
+          setAlert({show:true, success:true, msg:"Data has been updated, please refresh"})
+          setVersion(response.version);
+        }
+      }
+    }
+
+    fetch();
+
+    const intervalId = setInterval(fetch,2000);
+
+    return(
+      () => clearInterval(intervalId)
+    )
+  },[])
 
   useEffect(() => {
     setName(player.name);
@@ -49,6 +70,7 @@ const PlayerEditComponent = ({ user }) => {
           success: true,
           msg: "Player added successfully!",
         });
+        setVersion(prev => prev+1)
       } else {
         setAlert({
           show: true,
@@ -73,6 +95,7 @@ const PlayerEditComponent = ({ user }) => {
         success: true,
         msg: "Player deleted successfully",
       });
+      setVersion(prev => prev+1)
 
       if(playerIds.state === 'hasValue'){
         const updatedIds = playerIds.contents.filter(Id => Id !== player.id)
@@ -103,6 +126,7 @@ const PlayerEditComponent = ({ user }) => {
         success: true,
         msg: "Player updated successfully !",
       });
+      setVersion(prev => prev+1)
 
       if(playerIds.state === "hasValue"){
         let updatedIds = playerIds.contents.filter(Id => Id !== player.id);

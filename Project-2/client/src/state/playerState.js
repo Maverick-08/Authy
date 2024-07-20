@@ -62,3 +62,22 @@ export const updatePlayerAtom = atom({
         rpg: ""
     }
 })
+
+export const updateHistoryAtom = atom({
+    key: "updateHistoryAtom",
+    default: 1,
+    effects: [
+        ({setSelf, onSet}) => {
+            const value = JSON.parse(localStorage.getItem("updateHistory"))
+
+            if(value){
+                setSelf(value.version);
+            }
+
+            onSet((newValue) => {
+                setSelf(newValue)
+                localStorage.setItem("updateHistory",JSON.stringify({version:newValue}))
+            })
+        }
+    ]
+})

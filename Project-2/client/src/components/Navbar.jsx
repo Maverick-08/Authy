@@ -61,7 +61,6 @@ const Notifications = ({ user, display }) => {
     };
 
     fetch();
-    console.log(notifications)
     
   }, [display]);
 
