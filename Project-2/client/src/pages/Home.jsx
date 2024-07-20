@@ -66,6 +66,9 @@ const Home = () => {
                 <li className="text-2xl text-gray-400">
                   Persistence Authentication without using local storage
                 </li>
+                <li className="text-2xl text-gray-400">
+                  Track Real Time Changes
+                </li>
                 <li className="text-2xl text-gray-400">React-Router v6</li>
               </ul>
             </div>
