@@ -35,7 +35,7 @@ const PlayerEditComponent = ({ user }) => {
 
     fetch();
 
-    const intervalId = setInterval(fetch,2000);
+    const intervalId = setInterval(fetch,4000);
 
     return(
       () => clearInterval(intervalId)
